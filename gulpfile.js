@@ -25,7 +25,7 @@ gulp.task('build:templates', [], function() {
             quotes: true
         }))
         .pipe(ngHtml2Js({
-            moduleName: "angular.dialog",
+            moduleName: "angular.offcanvas",
             prefix: "templates/",
             declareModule: false
         }))
@@ -37,12 +37,12 @@ gulp.task('build:templates', [], function() {
  * build : scripts
  */
 gulp.task('build:scripts', ['build:templates'], function() {
-    return gulp.src(['src/dialog.js', 'src/*/**/*.js', 'templates/templates.js'])
+    return gulp.src(['src/offcanvas.js', 'src/*/**/*.js', 'templates/templates.js'])
         .pipe(plumber())
-        .pipe(concat('angular-dialog.js'))
+        .pipe(concat('angular-offcanvas.js'))
         .pipe(gulp.dest('./dist/'))
         .pipe(uglify())
-        .pipe(rename('angular-dialog.min.js'))
+        .pipe(rename('angular-offcanvas.min.js'))
         .pipe(gulp.dest('./dist'));
 });
 
@@ -50,14 +50,14 @@ gulp.task('build:scripts', ['build:templates'], function() {
  * build : styles
  */
 gulp.task('build:styles', [], function() {
-    return gulp.src('scss/dialog.scss')
+    return gulp.src('scss/*.scss')
         .pipe(plumber())
         .pipe(sass({style: 'expanded'}))
         .pipe(autoprefixer('last 1 version, ie 9, ie 10, ie 11'))
-        .pipe(rename('angular-dialog.css'))
+        .pipe(rename('angular-offcanvas.css'))
         .pipe(gulp.dest('./dist/'))
         .pipe(cssmin())
-        .pipe(rename('angular-dialog.min.css'))
+        .pipe(rename('angular-offcanvas.min.css'))
         .pipe(gulp.dest('./dist'));
 });
 
@@ -85,8 +85,8 @@ gulp.task('default', ['test', 'build']);
 /**
  * devel : watch
  */
-gulp.task('devel:watch', [] ,function () {
-    gulp.watch(['src/**/*', 'templates/**/*'], ['build:scripts']);
+gulp.task('devel:watch', ['build'] ,function () {
+    gulp.watch(['src/**/*', 'templates/**/*', 'app/**/*'], ['build:scripts']);
     gulp.watch(['scss/**/*'], ['build:styles']);
 });
 

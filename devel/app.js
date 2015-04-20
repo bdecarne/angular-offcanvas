@@ -1,13 +1,14 @@
-angular.module('App', ['angular.dialog'])
-    .controller('TestController', function($scope, $dialog) {
-        $scope.open = function() {
+angular.module('App', ['angular.offcanvas', 'ngAnimate'])
+    .controller('TestController', function($scope, $offcanvas) {
+        $scope.open = function(target) {
 
-            var dialogInstance = $dialog.open({
+            var instance = $offcanvas.open({
                 templateUrl: 'myDialog.html',
-                controller: 'DialogInstanceCtrl'
+                controller: 'DialogInstanceCtrl',
+                target: target
             });
 
-            dialogInstance.result.then(function (selectedItem) {
+            instance.result.then(function (selectedItem) {
                 //$log.info('Modal validated at: ' + new Date());
             }, function () {
                 //$log.info('Modal dismissed at: ' + new Date());
@@ -15,6 +16,6 @@ angular.module('App', ['angular.dialog'])
 
         };
     })
-    .controller('DialogInstanceCtrl', function($scope, $dialogInstance) {
+    .controller('DialogInstanceCtrl', function($scope, $offcanvasInstance) {
 
     });

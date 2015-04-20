@@ -1,5 +1,5 @@
-angular.module('angular.dialog')
-    .directive('dialogTransclude', function () {
+angular.module('angular.offcanvas')
+    .directive('offcanvasTransclude', function () {
         return {
             link: function($scope, $element, $attrs, controller, $transclude) {
                 $transclude($scope.$parent, function(clone) {

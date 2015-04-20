@@ -1,9 +1,9 @@
-angular.module('angular.dialog')
-    .directive('dialogStack', ['$timeout', function ($timeout) {
+angular.module('angular.offcanvas')
+    .directive('offcanvasStack', ['$timeout', function ($timeout) {
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/dialog/stack.html',
+            templateUrl: 'templates/offcanvas/stack.html',
             compile: function (tElement, tAttrs) {
                 tElement.addClass(tAttrs.stackClass);
                 return linkFn;

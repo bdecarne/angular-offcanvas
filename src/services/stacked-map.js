@@ -1,4 +1,4 @@
-angular.module('angular.dialog')
+angular.module('angular.offcanvas')
     .factory('$$stackedMap', function () {
         return {
             createNew: function () {

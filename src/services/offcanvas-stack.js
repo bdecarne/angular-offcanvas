@@ -1,5 +1,5 @@
-angular.module('angular.dialog')
-    .factory('$dialogStack', ['$animate', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
+angular.module('angular.offcanvas')
+    .factory('$offcanvasStack', ['$animate', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
         function ($animate, $timeout, $document, $compile, $rootScope, $$stackedMap) {
 
             var OPENED_DIALOG_CLASS = 'dialog-open';
@@ -106,18 +106,32 @@ angular.module('angular.dialog')
                     keyboard: modal.keyboard
                 });
 
-                var body = $document.find('body').eq(0);
-                currBackdropIndex = backdropIndex();
+                var body = $document.find('body').eq(0),
+                    currBackdropIndex = backdropIndex();
+
+                if (currBackdropIndex >= 0 && !backdropDomEl) {
+                    backdropScope = $rootScope.$new(true);
+                    backdropScope.index = currBackdropIndex;
+                    var angularBackgroundDomEl = angular.element('<div offcanvas-backdrop="offcanvas-backdrop"></div>');
+                    angularBackgroundDomEl.attr('backdrop-class', modal.backdropClass);
+                    //if (modal.animation) {
+                    //    angularBackgroundDomEl.attr('modal-animation', 'true');
+                    //}
+                    backdropDomEl = $compile(angularBackgroundDomEl)(backdropScope);
+                    body.append(backdropDomEl);
+                }
 
                 if (!stackDomEl) {
                     stackScope = $rootScope.$new(true);
-                    var stackElement = angular.element('<div dialog-stack="dialog-stack"></div>');
+                    var stackElement = angular.element('<div offcanvas-stack="offcanvas-stack"></div>');
                     stackElement.attr('stack-class', modal.stackClass);
                     stackDomEl = $compile(stackElement)(stackScope);
                     body.append(stackDomEl);
                 }
 
-                var angularDomEl = angular.element('<div dialog-window="dialog-window"></div>');
+
+
+                var angularDomEl = angular.element('<div offcanvas-window="offcanvas-window"></div>');
                 angularDomEl.attr({
                     'template-url': modal.windowTemplateUrl,
                     'window-class': modal.windowClass,

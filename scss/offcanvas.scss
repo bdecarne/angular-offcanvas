@@ -1,0 +1,151 @@
+@import "../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+
+//
+// Offcanvas
+// --------------------------------------------------
+$zindex-offcanvas-backdrop:		1031;
+$zindex-offcanvas:		1032;
+$offcanvas-bg: #FFF;
+
+$z-height-0: none;
+$z-height-1: 0 1px 3px 0 rgba(0,0,0,.33);
+$z-height-2: 0 3px 8px 0 rgba(0,0,0,.38);
+$z-height-3: 0 8px 14px 0 rgba(0,0,0,.38);
+$z-height-4: 0 14px 19px 0 rgba(0,0,0,.38);
+$z-height-5: 0 20px 24px 0 rgba(0,0,0,.38);
+
+$offcanvas-ease-in:				cubic-bezier(.22,.99,.68,.98);
+$offcanvas-speed-in:			.5s;
+$offcanvas-ease-out:			ease-in;
+$offcanvas-speed-out:			.33s;
+
+$offcanvas-title-size:					20px;
+$dimensions-steps:				40px;
+
+
+@mixin box-shadow($shadow...) {
+  -webkit-box-shadow: $shadow; // iOS <4.3 & Android <4.1
+  box-shadow: $shadow;
+}
+
+@mixin transition-transform($transition...) {
+  -webkit-transition: -webkit-transform $transition;
+  -moz-transition: -moz-transform $transition;
+  -o-transition: -o-transform $transition;
+  transition: transform $transition;
+}
+
+@mixin translate($x, $y) {
+  -webkit-transform: translate($x, $y);
+  -ms-transform: translate($x, $y); // IE9 only
+  -o-transform: translate($x, $y);
+  transform: translate($x, $y);
+}
+
+.width-1, .size-1 {		width: floor($dimensions-steps * 1); }
+.width-2, .size-2 {		width: floor($dimensions-steps * 2); }
+.width-3, .size-3 {		width: floor($dimensions-steps * 3); }
+.width-4, .size-4 {		width: floor($dimensions-steps * 4); }
+.width-5, .size-5 {		width: floor($dimensions-steps * 5); }
+.width-6, .size-6 {		width: floor($dimensions-steps * 6); }
+.width-7, .size-7 {		width: floor($dimensions-steps * 7); }
+.width-8, .size-8 {		width: floor($dimensions-steps * 8); }
+.width-9, .size-9 {		width: floor($dimensions-steps * 9); }
+.width-10, .size-10 {	width: floor($dimensions-steps * 10); }
+.width-11, .size-11 {	width: floor($dimensions-steps * 11); }
+.width-12, .size-12 {	width: floor($dimensions-steps * 12); }
+
+// General styles
+// -------------------------
+
+.offcanvas {
+  position: fixed;
+  top: 0; bottom: 0;
+  right: 0;
+  z-index: $zindex-offcanvas;
+}
+body.offcanvas-expanded {
+  overflow: hidden;
+}
+.offcanvas:first-child {
+  left: 0;
+  right: auto;
+}
+
+
+// Pane
+// -------------------------
+
+.offcanvas-pane {
+  position: absolute;
+  top: 0; bottom: 0;
+  min-width: 8px;
+  //max-width: 100%;
+  background-color: $offcanvas-bg;
+  overflow: auto;
+  @include box-shadow($z-height-0);
+  @include transition-transform($offcanvas-speed-out $offcanvas-ease-out);
+
+  &.active {
+    display: block;
+    @include box-shadow($z-height-3);
+    @include transition-transform($offcanvas-speed-in $offcanvas-ease-in);
+  }
+
+  &.in {
+    &.width-1 {		@include translate(floor($dimensions-steps * 1)*-1, 0);  }
+    &.width-2 {		@include translate(floor($dimensions-steps * 2)*-1, 0);  }
+    &.width-3 {		@include translate(floor($dimensions-steps * 3)*-1, 0);  }
+    &.width-4 {		@include translate(floor($dimensions-steps * 4)*-1, 0);  }
+    &.width-5 {		@include translate(floor($dimensions-steps * 5)*-1, 0);  }
+    &.width-6 {		@include translate(floor($dimensions-steps * 6)*-1, 0);  }
+    &.width-7 {		@include translate(floor($dimensions-steps * 7)*-1, 0);  }
+    &.width-8 {		@include translate(floor($dimensions-steps * 8)*-1, 0);  }
+    &.width-9 {		@include translate(floor($dimensions-steps * 9)*-1, 0);  }
+    &.width-10 {		@include translate(floor($dimensions-steps * 10)*-1, 0);  }
+    &.width-11 {		@include translate(floor($dimensions-steps * 11)*-1, 0);  }
+    &.width-12 {		@include translate(floor($dimensions-steps * 12)*-1, 0);  }
+  }
+}
+.offcanvas:first-child {
+  .offcanvas-pane {
+    right: 0;
+  }
+}
+
+
+// Offcanvas body
+// -------------------------
+
+.offcanvas-body {
+  padding: 16px;
+}
+
+
+// Offcanvas head
+// -------------------------
+
+.offcanvas-head {
+  position: relative;
+  padding: 4px 16px;
+
+  header {
+    font-size: $offcanvas-title-size;
+  }
+
+  .offcanvas-tools {
+    position: absolute;
+    left: 4px; right: 4px;
+    top: 4px;
+  }
+}
+
+.offcanvas-backdrop {
+  position: fixed;
+  z-index: $zindex-offcanvas-backdrop;
+  left: 0; right: 0;
+  top: 0; bottom: 0;
+  display: block;
+  //
+  background-color: rgba(#000000, 0.3);
+}

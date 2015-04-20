@@ -1,5 +1,5 @@
-angular.module('angular.dialog')
-    .directive('dialogWindow', ['$dialogStack', '$q', function ($dialogStack, $q) {
+angular.module('angular.offcanvas')
+    .directive('offcanvasWindow', ['$offcanvasStack', '$q', '$timeout', function ($offcanvasStack, $q, $timeout) {
         return {
             restrict: 'EA',
             scope: {
@@ -9,20 +9,19 @@ angular.module('angular.dialog')
             replace: true,
             transclude: true,
             templateUrl: function(tElement, tAttrs) {
-                return tAttrs.templateUrl || 'templates/dialog/window.html';
+                return tAttrs.templateUrl || 'templates/offcanvas/window.html';
             },
             link: function (scope, element, attrs) {
                 element.addClass(attrs.windowClass || '');
                 scope.size = attrs.size;
 
                 scope.close = function (evt) {
-                    var modal = $dialogStack.getTop();
-                    if (modal && modal.value.backdrop && modal.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
-                        evt.preventDefault();
-                        evt.stopPropagation();
-                        $dialogStack.dismiss(modal.key, 'backdrop click');
+                    var modal = $offcanvasStack.getTop();
+                    if (modal) {
+                        $offcanvasStack.dismiss(modal.key, 'backdrop click');
                     }
                 };
+
 
                 // This property is only added to the scope for the purpose of detecting when this directive is rendered.
                 // We can detect that by using this property in the template associated with this directive and then use
@@ -40,8 +39,13 @@ angular.module('angular.dialog')
                 });
 
                 modalRenderDeferObj.promise.then(function () {
+
+                    element.addClass('active');
+
                     // trigger CSS transitions
-                    scope.animate = true;
+                    $timeout(function () {
+                        scope.animate = true;
+                    });
 
                     var inputsWithAutofocus = element[0].querySelectorAll('[autofocus]');
                     /**
@@ -59,9 +63,9 @@ angular.module('angular.dialog')
                     }
 
                     // Notify {@link $dialogStack} that modal is rendered.
-                    var modal = $dialogStack.getTop();
+                    var modal = $offcanvasStack.getTop();
                     if (modal) {
-                        $dialogStack.modalRendered(modal.key);
+                        $offcanvasStack.modalRendered(modal.key);
                     }
                 });
             }

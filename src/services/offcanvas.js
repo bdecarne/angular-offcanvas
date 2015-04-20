@@ -1,15 +1,15 @@
-angular.module('angular.dialog')
-    .provider('$dialog', function () {
-        var $dialogProvider = {
+angular.module('angular.offcanvas')
+    .provider('$offcanvas', function () {
+        var $offcanvasProvider = {
             options: {
                 animation: true,
-                backdrop: true, //can be also false or 'static'
+                backdrop: false, //can be also false or 'static'
                 keyboard: true
             },
-            $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$dialogStack',
-                function ($injector, $rootScope, $q, $http, $templateCache, $controller, $dialogStack) {
+            $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$offcanvasStack',
+                function ($injector, $rootScope, $q, $http, $templateCache, $controller, $offcanvasStack) {
 
-                    var $dialog = {};
+                    var $offcanvas = {};
 
                     function getTemplatePromise(options) {
                         return options.template ? $q.when(options.template) :
@@ -29,7 +29,7 @@ angular.module('angular.dialog')
                         return promisesArr;
                     }
 
-                    $dialog.open = function (modalOptions) {
+                    $offcanvas.open = function (modalOptions) {
 
                         var modalResultDeferred = $q.defer();
                         var modalOpenedDeferred = $q.defer();
@@ -41,15 +41,15 @@ angular.module('angular.dialog')
                             opened: modalOpenedDeferred.promise,
                             rendered: modalRenderDeferred.promise,
                             close: function (result) {
-                                return $dialogStack.close(modalInstance, result);
+                                return $offcanvasStack.close(modalInstance, result);
                             },
                             dismiss: function (reason) {
-                                return $dialogStack.dismiss(modalInstance, reason);
+                                return $offcanvasStack.dismiss(modalInstance, reason);
                             }
                         };
 
                         //merge and clean up options
-                        modalOptions = angular.extend({}, $dialogProvider.options, modalOptions);
+                        modalOptions = angular.extend({}, $offcanvasProvider.options, modalOptions);
                         modalOptions.resolve = modalOptions.resolve || {};
 
                         //verify options
@@ -73,7 +73,7 @@ angular.module('angular.dialog')
                             //controllers
                             if (modalOptions.controller) {
                                 ctrlLocals.$scope = modalScope;
-                                ctrlLocals.$dialogInstance = modalInstance;
+                                ctrlLocals.$offcanvasInstance = modalInstance;
                                 angular.forEach(modalOptions.resolve, function (value, key) {
                                     ctrlLocals[key] = tplAndVars[resolveIter++];
                                 });
@@ -84,7 +84,7 @@ angular.module('angular.dialog')
                                 }
                             }
 
-                            $dialogStack.open(modalInstance, {
+                            $offcanvasStack.open(modalInstance, {
                                 scope: modalScope,
                                 deferred: modalResultDeferred,
                                 renderDeferred: modalRenderDeferred,
@@ -95,7 +95,8 @@ angular.module('angular.dialog')
                                 backdropClass: modalOptions.backdropClass,
                                 windowClass: modalOptions.windowClass,
                                 windowTemplateUrl: modalOptions.windowTemplateUrl,
-                                size: modalOptions.size
+                                size: modalOptions.size,
+                                target: modalOptions.target
                             });
 
                         }, function resolveError(reason) {
@@ -111,9 +112,9 @@ angular.module('angular.dialog')
                         return modalInstance;
                     };
 
-                    return $dialog;
+                    return $offcanvas;
                 }]
         };
 
-        return $dialogProvider;
+        return $offcanvasProvider;
     });
