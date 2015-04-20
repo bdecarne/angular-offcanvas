@@ -1,0 +1,10 @@
+<div modal-render="{{$isRendered}}" class="panel panel-default">
+    <div class="panel-heading">
+        <div class="pull-right">
+            <!--a href=""><i class="glyphicon glyphicon-option-horizontal"></i></a-->
+            <a href=""><i class="glyphicon glyphicon-remove" ng-click="close($event)"></i></a>
+        </div>
+        <h3 class="panel-title">Panel title</h3>
+    </div>
+    <div class="panel-body" dialog-transclude></div>
+</div>
