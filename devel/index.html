@@ -16,17 +16,12 @@
     </body>
 
 
-
-
-
-
-
     <script type="text/ng-template" id="myDialog.html">
 
         <div class="offcanvas-head">
             <header class="text-primary">Search</header>
             <div class="offcanvas-tools">
-                <a class="btn btn-icon-toggle btn-default-light pull-right" ng-click="instance.close($event)">
+                <a class="btn pull-right" ng-click="instance.close($event)">
                     <i class="fa fa-arrow-left" ng-if="instance.parent"></i>
                     <i class="fa fa-close" ng-if="!instance.parent"></i>
                 </a>

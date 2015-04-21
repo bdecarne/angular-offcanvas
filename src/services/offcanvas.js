@@ -29,101 +29,101 @@ angular.module('angular.offcanvas')
                         return promisesArr;
                     }
 
-                    $offcanvas.open = function (modalOptions) {
+                    $offcanvas.open = function (offcanvasOptions) {
 
-                        var modalResultDeferred = $q.defer();
-                        var modalOpenedDeferred = $q.defer();
-                        var modalRenderDeferred = $q.defer();
+                        var offcanvasResultDeferred = $q.defer();
+                        var offcanvasOpenedDeferred = $q.defer();
+                        var offcanvasRenderDeferred = $q.defer();
 
-                        //prepare an instance of a modal to be injected into controllers and returned to a caller
-                        var modalInstance = {
-                            result: modalResultDeferred.promise,
-                            opened: modalOpenedDeferred.promise,
-                            rendered: modalRenderDeferred.promise,
+                        //prepare an instance of a offcanvas to be injected into controllers and returned to a caller
+                        var offcanvasInstance = {
+                            result: offcanvasResultDeferred.promise,
+                            opened: offcanvasOpenedDeferred.promise,
+                            rendered: offcanvasRenderDeferred.promise,
                             close: function (result) {
-                                return $offcanvasStack.close(modalInstance, result);
+                                return $offcanvasStack.close(offcanvasInstance, result);
                             },
                             dismiss: function (reason) {
-                                return $offcanvasStack.dismiss(modalInstance, reason);
+                                return $offcanvasStack.dismiss(offcanvasInstance, reason);
                             }
                         };
 
                         // inject parent
-                        if(modalOptions.parent) {
-                            modalInstance.parent = modalOptions.parent;
+                        if(offcanvasOptions.parent) {
+                            offcanvasInstance.parent = offcanvasOptions.parent;
                         }
 
                         //merge and clean up options
-                        modalOptions = angular.extend({}, $offcanvasProvider.options, modalOptions);
-                        modalOptions.resolve = modalOptions.resolve || {};
+                        offcanvasOptions = angular.extend({}, $offcanvasProvider.options, offcanvasOptions);
+                        offcanvasOptions.resolve = offcanvasOptions.resolve || {};
 
                         //verify options
-                        if (!modalOptions.template && !modalOptions.templateUrl) {
+                        if (!offcanvasOptions.template && !offcanvasOptions.templateUrl) {
                             throw new Error('One of template or templateUrl options is required.');
                         }
 
                         var templateAndResolvePromise =
-                            $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
+                            $q.all([getTemplatePromise(offcanvasOptions)].concat(getResolvePromises(offcanvasOptions.resolve)));
 
 
                         templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
 
-                            var modalScope = (modalOptions.scope || $rootScope).$new();
-                            modalScope.$close = modalInstance.close;
-                            modalScope.$dismiss = modalInstance.dismiss;
+                            var offcanvasScope = (offcanvasOptions.scope || $rootScope).$new();
+                            offcanvasScope.$close = offcanvasInstance.close;
+                            offcanvasScope.$dismiss = offcanvasInstance.dismiss;
 
                             var ctrlInstance, ctrlLocals = {};
                             var resolveIter = 1;
 
                             //controllers
-                            if (modalOptions.controller) {
-                                ctrlLocals.$scope = modalScope;
-                                ctrlLocals.$offcanvasInstance = modalInstance;
-                                angular.forEach(modalOptions.resolve, function (value, key) {
+                            if (offcanvasOptions.controller) {
+                                ctrlLocals.$scope = offcanvasScope;
+                                ctrlLocals.$offcanvasInstance = offcanvasInstance;
+                                angular.forEach(offcanvasOptions.resolve, function (value, key) {
                                     ctrlLocals[key] = tplAndVars[resolveIter++];
                                 });
 
-                                ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
-                                if (modalOptions.controllerAs) {
-                                    modalScope[modalOptions.controllerAs] = ctrlInstance;
+                                ctrlInstance = $controller(offcanvasOptions.controller, ctrlLocals);
+                                if (offcanvasOptions.controllerAs) {
+                                    offcanvasScope[offcanvasOptions.controllerAs] = ctrlInstance;
                                 }
                             }
 
 
-                            if(modalInstance.parent) {
-                                $offcanvasStack.reduce(modalInstance.parent);
+                            if(offcanvasInstance.parent) {
+                                $offcanvasStack.reduce(offcanvasInstance.parent);
                             } else {
                                 $offcanvasStack.dismissAll();
                             }
 
 
-                            $offcanvasStack.open(modalInstance, {
-                                scope: modalScope,
-                                deferred: modalResultDeferred,
-                                renderDeferred: modalRenderDeferred,
+                            $offcanvasStack.open(offcanvasInstance, {
+                                scope: offcanvasScope,
+                                deferred: offcanvasResultDeferred,
+                                renderDeferred: offcanvasRenderDeferred,
                                 content: tplAndVars[0],
-                                parent: modalOptions.parent,
-                                animation: modalOptions.animation,
-                                backdrop: modalOptions.backdrop,
-                                keyboard: modalOptions.keyboard,
-                                backdropClass: modalOptions.backdropClass,
-                                windowClass: modalOptions.windowClass,
-                                windowTemplateUrl: modalOptions.windowTemplateUrl,
-                                size: modalOptions.size,
-                                target: modalOptions.target
+                                parent: offcanvasOptions.parent,
+                                animation: offcanvasOptions.animation,
+                                backdrop: offcanvasOptions.backdrop,
+                                keyboard: offcanvasOptions.keyboard,
+                                backdropClass: offcanvasOptions.backdropClass,
+                                windowClass: offcanvasOptions.windowClass,
+                                windowTemplateUrl: offcanvasOptions.windowTemplateUrl,
+                                size: offcanvasOptions.size,
+                                target: offcanvasOptions.target
                             });
 
                         }, function resolveError(reason) {
-                            modalResultDeferred.reject(reason);
+                            offcanvasResultDeferred.reject(reason);
                         });
 
                         templateAndResolvePromise.then(function () {
-                            modalOpenedDeferred.resolve(true);
+                            offcanvasOpenedDeferred.resolve(true);
                         }, function (reason) {
-                            modalOpenedDeferred.reject(reason);
+                            offcanvasOpenedDeferred.reject(reason);
                         });
 
-                        return modalInstance;
+                        return offcanvasInstance;
                     };
 
                     return $offcanvas;

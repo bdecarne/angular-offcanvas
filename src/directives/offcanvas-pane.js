@@ -16,9 +16,9 @@ angular.module('angular.offcanvas')
                 scope.size = attrs.size;
 
                 /*scope.close = function (evt) {
-                    var modal = $offcanvasStack.getTop();
-                    if (modal) {
-                        $offcanvasStack.dismiss(modal.key, 'backdrop click');
+                    var offcanvas = $offcanvasStack.getTop();
+                    if (offcanvas) {
+                        $offcanvasStack.dismiss(offcanvas.key, 'backdrop click');
                     }
                 };*/
 
@@ -28,17 +28,17 @@ angular.module('angular.offcanvas')
                 // {@link Attribute#$observe} on it. For more details please see {@link TableColumnResize}.
                 scope.$isRendered = true;
 
-                // Deferred object that will be resolved when this modal is render.
-                var modalRenderDeferObj = $q.defer();
+                // Deferred object that will be resolved when this offcanvas is render.
+                var offcanvasRenderDeferObj = $q.defer();
                 // Observe function will be called on next digest cycle after compilation, ensuring that the DOM is ready.
-                // In order to use this way of finding whether DOM is ready, we need to observe a scope property used in modal's template.
-                attrs.$observe('modalRender', function (value) {
+                // In order to use this way of finding whether DOM is ready, we need to observe a scope property used in offcanvas's template.
+                attrs.$observe('offcanvasRender', function (value) {
                     if (value == 'true') {
-                        modalRenderDeferObj.resolve();
+                        offcanvasRenderDeferObj.resolve();
                     }
                 });
 
-                modalRenderDeferObj.promise.then(function () {
+                offcanvasRenderDeferObj.promise.then(function () {
 
                     // trigger CSS transitions
                     $timeout(function () {
@@ -47,12 +47,12 @@ angular.module('angular.offcanvas')
 
                     var inputsWithAutofocus = element[0].querySelectorAll('[autofocus]');
                     /**
-                     * Auto-focusing of a freshly-opened modal element causes any child elements
+                     * Auto-focusing of a freshly-opened offcanvas element causes any child elements
                      * with the autofocus attribute to lose focus. This is an issue on touch
                      * based devices which will show and then hide the onscreen keyboard.
                      * Attempts to refocus the autofocus element via JavaScript will not reopen
                      * the onscreen keyboard. Fixed by updated the focusing logic to only autofocus
-                     * the modal element if the modal does not contain an autofocus element.
+                     * the offcanvas element if the offcanvas does not contain an autofocus element.
                      */
                     if (inputsWithAutofocus.length) {
                         inputsWithAutofocus[0].focus();
@@ -60,10 +60,10 @@ angular.module('angular.offcanvas')
                         element[0].focus();
                     }
 
-                    // Notify {@link $dialogStack} that modal is rendered.
-                    var modal = $offcanvasStack.getTop();
-                    if (modal) {
-                        $offcanvasStack.modalRendered(modal.key);
+                    // Notify {@link $dialogStack} that offcanvas is rendered.
+                    var offcanvas = $offcanvasStack.getTop();
+                    if (offcanvas) {
+                        $offcanvasStack.offcanvasRendered(offcanvas.key);
                     }
                 });
             }

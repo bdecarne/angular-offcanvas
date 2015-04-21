@@ -14,11 +14,11 @@ angular.module('angular.offcanvas')
             scope.animate = false;
 
             scope.close = function (evt) {
-                var modal = $offcanvasStack.getTop();
-                if (modal && modal.value.backdrop && modal.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
+                var offcanvas = $offcanvasStack.getTop();
+                if (offcanvas && offcanvas.value.backdrop && offcanvas.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
                     evt.preventDefault();
                     evt.stopPropagation();
-                    $offcanvasStack.dismiss(modal.key, 'backdrop click');
+                    $offcanvasStack.dismiss(offcanvas.key, 'backdrop click');
                 }
             };
 

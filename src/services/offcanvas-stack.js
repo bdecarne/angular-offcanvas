@@ -27,21 +27,21 @@ angular.module('angular.offcanvas')
                 }
             });
 
-            function removeModalWindow(modalInstance) {
+            function removeOffcanvasWindow(offcanvasInstance) {
 
                 var body = $document.find('body').eq(0);
-                var modalWindow = openedWindows.get(modalInstance).value;
+                var offcanvasWindow = openedWindows.get(offcanvasInstance).value;
 
                 //clean up the stack
-                openedWindows.remove(modalInstance);
+                openedWindows.remove(offcanvasInstance);
 
                 //if there is parent instance, extend it
-                if(modalInstance.parent) {
-                    $offcanvasStack.extend(modalInstance.parent);
+                if(offcanvasInstance.parent) {
+                    $offcanvasStack.extend(offcanvasInstance.parent);
                 }
 
                 //remove window DOM element
-                removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, function() {
+                removeAfterAnimate(offcanvasWindow.offcanvasDomEl, offcanvasWindow.offcanvasScope, function() {
                     body.toggleClass(OPENED_DIALOG_CLASS, openedWindows.length() > 0);
                     checkRemoveBackdrop();
                 });
@@ -63,7 +63,7 @@ angular.module('angular.offcanvas')
                 // Closing animation
                 scope.animate = false;
 
-                if (domEl.attr('modal-animation') && $animate.enabled()) {
+                if (domEl.attr('offcanvas-animation') && $animate.enabled()) {
                     // transition out
                     domEl.one('$animate:close', function closeFn() {
                         $rootScope.$evalAsync(afterAnimating);
@@ -88,27 +88,27 @@ angular.module('angular.offcanvas')
             }
 
             $document.bind('keydown', function (evt) {
-                var modal;
+                var offcanvas;
 
                 if (evt.which === 27) {
-                    modal = openedWindows.top();
-                    if (modal && modal.value.keyboard) {
+                    offcanvas = openedWindows.top();
+                    if (offcanvas && offcanvas.value.keyboard) {
                         evt.preventDefault();
                         $rootScope.$apply(function () {
-                            $offcanvasStack.dismiss(modal.key, 'escape key press');
+                            $offcanvasStack.dismiss(offcanvas.key, 'escape key press');
                         });
                     }
                 }
             });
 
-            $offcanvasStack.open = function (modalInstance, modal) {
+            $offcanvasStack.open = function (offcanvasInstance, offcanvas) {
 
-                openedWindows.add(modalInstance, {
-                    deferred: modal.deferred,
-                    renderDeferred: modal.renderDeferred,
-                    modalScope: modal.scope,
-                    backdrop: modal.backdrop,
-                    keyboard: modal.keyboard
+                openedWindows.add(offcanvasInstance, {
+                    deferred: offcanvas.deferred,
+                    renderDeferred: offcanvas.renderDeferred,
+                    offcanvasScope: offcanvas.scope,
+                    backdrop: offcanvas.backdrop,
+                    keyboard: offcanvas.keyboard
                 });
 
                 var body = $document.find('body').eq(0),
@@ -118,9 +118,9 @@ angular.module('angular.offcanvas')
                     backdropScope = $rootScope.$new(true);
                     backdropScope.index = currBackdropIndex;
                     var angularBackgroundDomEl = angular.element('<div offcanvas-backdrop="offcanvas-backdrop"></div>');
-                    angularBackgroundDomEl.attr('backdrop-class', modal.backdropClass);
-                    if (modal.animation) {
-                        angularBackgroundDomEl.attr('modal-animation', 'true');
+                    angularBackgroundDomEl.attr('backdrop-class', offcanvas.backdropClass);
+                    if (offcanvas.animation) {
+                        angularBackgroundDomEl.attr('offcanvas-animation', 'true');
                     }
                     backdropDomEl = $compile(angularBackgroundDomEl)(backdropScope);
                     body.append(backdropDomEl);
@@ -129,75 +129,75 @@ angular.module('angular.offcanvas')
                 if (!stackDomEl) {
                     stackScope = $rootScope.$new(true);
                     var stackElement = angular.element('<div offcanvas-stack="offcanvas-stack"></div>');
-                    stackElement.attr('stack-class', modal.stackClass);
+                    stackElement.attr('stack-class', offcanvas.stackClass);
                     stackDomEl = $compile(stackElement)(stackScope);
                     body.append(stackDomEl);
                 }
 
                 var angularDomEl = angular.element('<div offcanvas-pane="offcanvas-pane"></div>');
                 angularDomEl.attr({
-                    'template-url': modal.paneTemplateUrl,
-                    'pane-class': modal.paneClass,
-                    'size': modal.size,
+                    'template-url': offcanvas.paneTemplateUrl,
+                    'pane-class': offcanvas.paneClass,
+                    'size': offcanvas.size,
                     'index': openedWindows.length() - 1,
                     'animate': 'animate'
-                }).html(modal.content);
-                if (modal.animation) {
-                    angularDomEl.attr('modal-animation', 'true');
+                }).html(offcanvas.content);
+                if (offcanvas.animation) {
+                    angularDomEl.attr('offcanvas-animation', 'true');
                 }
 
-                var modalDomEl = $compile(angularDomEl)(modal.scope);
-                openedWindows.top().value.modalDomEl = modalDomEl;
+                var offcanvasDomEl = $compile(angularDomEl)(offcanvas.scope);
+                openedWindows.top().value.offcanvasDomEl = offcanvasDomEl;
                 $timeout(function() {
-                    stackDomEl.append(modalDomEl);
+                    stackDomEl.append(offcanvasDomEl);
                     body.addClass(OPENED_DIALOG_CLASS);
                 });
             };
 
-            function broadcastClosing(modalWindow, resultOrReason, closing) {
-                return !modalWindow.value.modalScope.$broadcast('modal.closing', resultOrReason, closing).defaultPrevented;
+            function broadcastClosing(offcanvasWindow, resultOrReason, closing) {
+                return !offcanvasWindow.value.offcanvasScope.$broadcast('offcanvas.closing', resultOrReason, closing).defaultPrevented;
             }
 
-            $offcanvasStack.close = function (modalInstance, result) {
-                var modalWindow = openedWindows.get(modalInstance);
-                if (modalWindow && broadcastClosing(modalWindow, result, true)) {
-                    modalWindow.value.deferred.resolve(result);
-                    removeModalWindow(modalInstance);
+            $offcanvasStack.close = function (offcanvasInstance, result) {
+                var offcanvasWindow = openedWindows.get(offcanvasInstance);
+                if (offcanvasWindow && broadcastClosing(offcanvasWindow, result, true)) {
+                    offcanvasWindow.value.deferred.resolve(result);
+                    removeOffcanvasWindow(offcanvasInstance);
                     return true;
                 }
-                return !modalWindow;
+                return !offcanvasWindow;
             };
 
-            $offcanvasStack.dismiss = function (modalInstance, reason) {
-                var modalWindow = openedWindows.get(modalInstance);
-                if (modalWindow && broadcastClosing(modalWindow, reason, false)) {
-                    modalWindow.value.deferred.reject(reason);
-                    removeModalWindow(modalInstance);
+            $offcanvasStack.dismiss = function (offcanvasInstance, reason) {
+                var offcanvasWindow = openedWindows.get(offcanvasInstance);
+                if (offcanvasWindow && broadcastClosing(offcanvasWindow, reason, false)) {
+                    offcanvasWindow.value.deferred.reject(reason);
+                    removeOffcanvasWindow(offcanvasInstance);
                     return true;
                 }
-                return !modalWindow;
+                return !offcanvasWindow;
             };
 
-            $offcanvasStack.reduce = function (modalInstance) {
-                var modalWindow = openedWindows.get(modalInstance);
-                if(modalWindow) {
-                    var modalDomEl = modalWindow.value.modalDomEl;
-                    modalDomEl.removeClass('offcanvas-opened').addClass('offcanvas-reduced');
+            $offcanvasStack.reduce = function (offcanvasInstance) {
+                var offcanvasWindow = openedWindows.get(offcanvasInstance);
+                if(offcanvasWindow) {
+                    var offcanvasDomEl = offcanvasWindow.value.offcanvasDomEl;
+                    offcanvasDomEl.removeClass('offcanvas-opened').addClass('offcanvas-reduced');
                 }
             };
 
-            $offcanvasStack.extend = function (modalInstance) {
-                var modalWindow = openedWindows.get(modalInstance);
-                if(modalWindow) {
-                    var modalDomEl = modalWindow.value.modalDomEl;
-                    modalDomEl.removeClass('offcanvas-reduced').addClass('offcanvas-opened');
+            $offcanvasStack.extend = function (offcanvasInstance) {
+                var offcanvasWindow = openedWindows.get(offcanvasInstance);
+                if(offcanvasWindow) {
+                    var offcanvasDomEl = offcanvasWindow.value.offcanvasDomEl;
+                    offcanvasDomEl.removeClass('offcanvas-reduced').addClass('offcanvas-opened');
                 }
             };
 
             $offcanvasStack.dismissAll = function (reason) {
-                var topModal = this.getTop();
-                while (topModal && this.dismiss(topModal.key, reason)) {
-                    topModal = this.getTop();
+                var topOffcanvas = this.getTop();
+                while (topOffcanvas && this.dismiss(topOffcanvas.key, reason)) {
+                    topOffcanvas = this.getTop();
                 }
             };
 
@@ -205,10 +205,10 @@ angular.module('angular.offcanvas')
                 return openedWindows.top();
             };
 
-            $offcanvasStack.modalRendered = function (modalInstance) {
-                var modalWindow = openedWindows.get(modalInstance);
-                if (modalWindow) {
-                    modalWindow.value.renderDeferred.resolve();
+            $offcanvasStack.offcanvasRendered = function (offcanvasInstance) {
+                var offcanvasWindow = openedWindows.get(offcanvasInstance);
+                if (offcanvasWindow) {
+                    offcanvasWindow.value.renderDeferred.resolve();
                 }
             };
 
