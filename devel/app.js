@@ -6,7 +6,7 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 templateUrl: 'myDialog.html',
                 controller: 'DialogInstanceCtrl',
                 size: size,
-                backdrop: true,
+                backdrop: false,
                 resolve:{
                     test: function() {
                         return "dfsdf";
@@ -31,6 +31,7 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 controller: 'DialogInstanceCtrl',
                 parent: $offcanvasInstance,
                 size: size,
+                backdrop: true,
                 resolve:{
                     test: function() {
                         return "dfsdf";

@@ -2,7 +2,8 @@ angular.module('angular.offcanvas')
     .factory('$offcanvasStack', ['$animate', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
         function ($animate, $timeout, $document, $compile, $rootScope, $$stackedMap) {
 
-            var OPENED_OFFCANVAS_CLASS = 'offcanvas-expanded';
+            var OPENED_OFFCANVAS_CLASS = 'offcanvas-opened'
+            var BACKDROP_OFFCANVAS_CLASS = 'offcanvas-with-backdrop';
             var stackDomEl, stackScope;
 
 
@@ -48,9 +49,11 @@ angular.module('angular.offcanvas')
             }
 
             function checkRemoveBackdrop() {
+                var body = $document.find('body').eq(0);
                 //remove backdrop if no longer needed
                 if (backdropDomEl && backdropIndex() == -1) {
                     var backdropScopeRef = backdropScope;
+                    body.removeClass(BACKDROP_OFFCANVAS_CLASS);
                     removeAfterAnimate(backdropDomEl, backdropScope, function () {
                         backdropScopeRef = null;
                     });
@@ -124,6 +127,7 @@ angular.module('angular.offcanvas')
                     }
                     backdropDomEl = $compile(angularBackgroundDomEl)(backdropScope);
                     body.append(backdropDomEl);
+                    body.addClass(BACKDROP_OFFCANVAS_CLASS);
                 }
 
                 if (!stackDomEl) {

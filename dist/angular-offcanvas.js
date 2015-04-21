@@ -1,5 +1,15 @@
 angular.module('angular.offcanvas', []);
 angular.module('angular.offcanvas')
+    .directive('offcanvasAnimationClass', function () {
+        return {
+            compile: function (tElement, tAttrs) {
+                if (tAttrs.offcanvasAnimation) {
+                    tElement.addClass(tAttrs.offcanvasAnimationClass);
+                }
+            }
+        };
+    });
+angular.module('angular.offcanvas')
     .directive('offcanvasBackdrop', ['$offcanvasStack', '$timeout', function ($offcanvasStack, $timeout) {
         return {
             restrict: 'EA',
@@ -166,7 +176,8 @@ angular.module('angular.offcanvas')
     .factory('$offcanvasStack', ['$animate', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
         function ($animate, $timeout, $document, $compile, $rootScope, $$stackedMap) {
 
-            var OPENED_OFFCANVAS_CLASS = 'offcanvas-expanded';
+            var OPENED_OFFCANVAS_CLASS = 'offcanvas-opened'
+            var BACKDROP_OFFCANVAS_CLASS = 'offcanvas-with-backdrop';
             var stackDomEl, stackScope;
 
 
@@ -212,9 +223,11 @@ angular.module('angular.offcanvas')
             }
 
             function checkRemoveBackdrop() {
+                var body = $document.find('body').eq(0);
                 //remove backdrop if no longer needed
                 if (backdropDomEl && backdropIndex() == -1) {
                     var backdropScopeRef = backdropScope;
+                    body.removeClass(BACKDROP_OFFCANVAS_CLASS);
                     removeAfterAnimate(backdropDomEl, backdropScope, function () {
                         backdropScopeRef = null;
                     });
@@ -288,6 +301,7 @@ angular.module('angular.offcanvas')
                     }
                     backdropDomEl = $compile(angularBackgroundDomEl)(backdropScope);
                     body.append(backdropDomEl);
+                    body.addClass(BACKDROP_OFFCANVAS_CLASS);
                 }
 
                 if (!stackDomEl) {
@@ -564,7 +578,7 @@ angular.module('angular.offcanvas')
     });
 angular.module('angular.offcanvas').run(['$templateCache', function($templateCache) {
   $templateCache.put('templates/offcanvas/backdrop.html',
-    '<div class="offcanvas-backdrop fade" ng-click="close($event)" ng-class="{in: animate}"></div>');
+    '<div class="offcanvas-backdrop" offcanvas-animation-class="fade" ng-click="close($event)" ng-class="{in: animate}"></div>');
 }]);
 
 angular.module('angular.offcanvas').run(['$templateCache', function($templateCache) {

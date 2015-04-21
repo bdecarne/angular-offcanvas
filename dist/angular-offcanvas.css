@@ -1,37 +1,37 @@
-.width-1, .size-1 {
+.width-1 {
   width: 40px; }
 
-.width-2, .size-2 {
+.width-2 {
   width: 80px; }
 
-.width-3, .size-3 {
+.width-3 {
   width: 120px; }
 
-.width-4, .size-4 {
+.width-4 {
   width: 160px; }
 
-.width-5, .size-5 {
+.width-5 {
   width: 200px; }
 
-.width-6, .size-6 {
+.width-6 {
   width: 240px; }
 
-.width-7, .size-7 {
+.width-7 {
   width: 280px; }
 
-.width-8, .size-8 {
+.width-8 {
   width: 320px; }
 
-.width-9, .size-9 {
+.width-9 {
   width: 360px; }
 
-.width-10, .size-10 {
+.width-10 {
   width: 400px; }
 
-.width-11, .size-11 {
+.width-11 {
   width: 440px; }
 
-.width-12, .size-12 {
+.width-12 {
   width: 480px; }
 
 .offcanvas {
@@ -41,7 +41,7 @@
   right: 0;
   z-index: 1032; }
 
-body.offcanvas-expanded {
+body.offcanvas-with-backdrop {
   overflow: hidden; }
 
 .offcanvas:first-child {

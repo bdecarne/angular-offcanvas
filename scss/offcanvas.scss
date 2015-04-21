@@ -45,18 +45,18 @@ $dimensions-steps:				40px;
   transition: $transition;
 }
 
-.width-1, .size-1 {		width: floor($dimensions-steps * 1); }
-.width-2, .size-2 {		width: floor($dimensions-steps * 2); }
-.width-3, .size-3 {		width: floor($dimensions-steps * 3); }
-.width-4, .size-4 {		width: floor($dimensions-steps * 4); }
-.width-5, .size-5 {		width: floor($dimensions-steps * 5); }
-.width-6, .size-6 {		width: floor($dimensions-steps * 6); }
-.width-7, .size-7 {		width: floor($dimensions-steps * 7); }
-.width-8, .size-8 {		width: floor($dimensions-steps * 8); }
-.width-9, .size-9 {		width: floor($dimensions-steps * 9); }
-.width-10, .size-10 {	width: floor($dimensions-steps * 10); }
-.width-11, .size-11 {	width: floor($dimensions-steps * 11); }
-.width-12, .size-12 {	width: floor($dimensions-steps * 12); }
+.width-1 {		width: floor($dimensions-steps * 1); }
+.width-2 {		width: floor($dimensions-steps * 2); }
+.width-3 {		width: floor($dimensions-steps * 3); }
+.width-4 {		width: floor($dimensions-steps * 4); }
+.width-5 {		width: floor($dimensions-steps * 5); }
+.width-6 {		width: floor($dimensions-steps * 6); }
+.width-7 {		width: floor($dimensions-steps * 7); }
+.width-8 {		width: floor($dimensions-steps * 8); }
+.width-9 {		width: floor($dimensions-steps * 9); }
+.width-10 {	width: floor($dimensions-steps * 10); }
+.width-11 {	width: floor($dimensions-steps * 11); }
+.width-12 {	width: floor($dimensions-steps * 12); }
 
 // General styles
 // -------------------------
@@ -67,9 +67,11 @@ $dimensions-steps:				40px;
   right: 0;
   z-index: $zindex-offcanvas;
 }
-body.offcanvas-expanded {
+
+body.offcanvas-with-backdrop {
   overflow: hidden;
 }
+
 .offcanvas:first-child {
   left: 0;
   right: auto;
