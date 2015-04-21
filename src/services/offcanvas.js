@@ -48,6 +48,11 @@ angular.module('angular.offcanvas')
                             }
                         };
 
+                        // inject parent
+                        if(modalOptions.parent) {
+                            modalInstance.parent = modalOptions.parent;
+                        }
+
                         //merge and clean up options
                         modalOptions = angular.extend({}, $offcanvasProvider.options, modalOptions);
                         modalOptions.resolve = modalOptions.resolve || {};
@@ -84,11 +89,20 @@ angular.module('angular.offcanvas')
                                 }
                             }
 
+
+                            if(modalInstance.parent) {
+                                $offcanvasStack.reduce(modalInstance.parent);
+                            } else {
+                                $offcanvasStack.dismissAll();
+                            }
+
+
                             $offcanvasStack.open(modalInstance, {
                                 scope: modalScope,
                                 deferred: modalResultDeferred,
                                 renderDeferred: modalRenderDeferred,
                                 content: tplAndVars[0],
+                                parent: modalOptions.parent,
                                 animation: modalOptions.animation,
                                 backdrop: modalOptions.backdrop,
                                 keyboard: modalOptions.keyboard,

@@ -15,12 +15,12 @@ angular.module('angular.offcanvas')
                 element.addClass(attrs.windowClass || '');
                 scope.size = attrs.size;
 
-                scope.close = function (evt) {
+                /*scope.close = function (evt) {
                     var modal = $offcanvasStack.getTop();
                     if (modal) {
                         $offcanvasStack.dismiss(modal.key, 'backdrop click');
                     }
-                };
+                };*/
 
 
                 // This property is only added to the scope for the purpose of detecting when this directive is rendered.
@@ -39,8 +39,6 @@ angular.module('angular.offcanvas')
                 });
 
                 modalRenderDeferObj.promise.then(function () {
-
-                    element.addClass('active');
 
                     // trigger CSS transitions
                     $timeout(function () {

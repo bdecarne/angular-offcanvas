@@ -8,7 +8,7 @@ angular.module('angular.offcanvas')
 
             var backdropDomEl, backdropScope;
             var openedWindows = $$stackedMap.createNew();
-            var $dialogStack = {};
+            var $offcanvasStack = {};
 
             function backdropIndex() {
                 var topBackdropIndex = -1;
@@ -34,6 +34,11 @@ angular.module('angular.offcanvas')
 
                 //clean up the stack
                 openedWindows.remove(modalInstance);
+
+                //if there is parent instance, extend it
+                if(modalInstance.parent) {
+                    $offcanvasStack.extend(modalInstance.parent);
+                }
 
                 //remove window DOM element
                 removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, function() {
@@ -90,13 +95,13 @@ angular.module('angular.offcanvas')
                     if (modal && modal.value.keyboard) {
                         evt.preventDefault();
                         $rootScope.$apply(function () {
-                            $dialogStack.dismiss(modal.key, 'escape key press');
+                            $offcanvasStack.dismiss(modal.key, 'escape key press');
                         });
                     }
                 }
             });
 
-            $dialogStack.open = function (modalInstance, modal) {
+            $offcanvasStack.open = function (modalInstance, modal) {
 
                 openedWindows.add(modalInstance, {
                     deferred: modal.deferred,
@@ -155,7 +160,7 @@ angular.module('angular.offcanvas')
                 return !modalWindow.value.modalScope.$broadcast('modal.closing', resultOrReason, closing).defaultPrevented;
             }
 
-            $dialogStack.close = function (modalInstance, result) {
+            $offcanvasStack.close = function (modalInstance, result) {
                 var modalWindow = openedWindows.get(modalInstance);
                 if (modalWindow && broadcastClosing(modalWindow, result, true)) {
                     modalWindow.value.deferred.resolve(result);
@@ -165,7 +170,7 @@ angular.module('angular.offcanvas')
                 return !modalWindow;
             };
 
-            $dialogStack.dismiss = function (modalInstance, reason) {
+            $offcanvasStack.dismiss = function (modalInstance, reason) {
                 var modalWindow = openedWindows.get(modalInstance);
                 if (modalWindow && broadcastClosing(modalWindow, reason, false)) {
                     modalWindow.value.deferred.reject(reason);
@@ -175,23 +180,39 @@ angular.module('angular.offcanvas')
                 return !modalWindow;
             };
 
-            $dialogStack.dismissAll = function (reason) {
+            $offcanvasStack.reduce = function (modalInstance) {
+                var modalWindow = openedWindows.get(modalInstance);
+                if(modalWindow) {
+                    var modalDomEl = modalWindow.value.modalDomEl;
+                    modalDomEl.removeClass('offcanvas-opened').addClass('offcanvas-reduced');
+                }
+            };
+
+            $offcanvasStack.extend = function (modalInstance) {
+                var modalWindow = openedWindows.get(modalInstance);
+                if(modalWindow) {
+                    var modalDomEl = modalWindow.value.modalDomEl;
+                    modalDomEl.removeClass('offcanvas-reduced').addClass('offcanvas-opened');
+                }
+            };
+
+            $offcanvasStack.dismissAll = function (reason) {
                 var topModal = this.getTop();
                 while (topModal && this.dismiss(topModal.key, reason)) {
                     topModal = this.getTop();
                 }
             };
 
-            $dialogStack.getTop = function () {
+            $offcanvasStack.getTop = function () {
                 return openedWindows.top();
             };
 
-            $dialogStack.modalRendered = function (modalInstance) {
+            $offcanvasStack.modalRendered = function (modalInstance) {
                 var modalWindow = openedWindows.get(modalInstance);
                 if (modalWindow) {
                     modalWindow.value.renderDeferred.resolve();
                 }
             };
 
-            return $dialogStack;
+            return $offcanvasStack;
         }]);

@@ -1,11 +1,16 @@
 angular.module('App', ['angular.offcanvas', 'ngAnimate'])
     .controller('TestController', function($scope, $offcanvas) {
-        $scope.open = function(target) {
+        $scope.open = function(size) {
 
             var instance = $offcanvas.open({
                 templateUrl: 'myDialog.html',
                 controller: 'DialogInstanceCtrl',
-                target: target
+                size: size,
+                resolve:{
+                    test: function() {
+                        return "dfsdf";
+                    }
+                }
             });
 
             instance.result.then(function (selectedItem) {
@@ -16,6 +21,21 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
 
         };
     })
-    .controller('DialogInstanceCtrl', function($scope, $offcanvasInstance) {
+    .controller('DialogInstanceCtrl', function($scope, $offcanvas, $offcanvasInstance, test) {
+        $scope.test = test;
+        $scope.instance = $offcanvasInstance;
+        $scope.open = function(size) {
+            var instance = $offcanvas.open({
+                templateUrl: 'myDialog.html',
+                controller: 'DialogInstanceCtrl',
+                parent: $offcanvasInstance,
+                size: size,
+                resolve:{
+                    test: function() {
+                        return "dfsdf";
+                    }
+                }
+            });
+        };
 
     });

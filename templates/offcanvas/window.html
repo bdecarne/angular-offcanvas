@@ -1,11 +1,1 @@
-<div modal-render="{{$isRendered}}" class="offcanvas-pane width-12" ng-class="{in: animate}" >
-    <div class="offcanvas-head">
-        <header class="text-primary">Search</header>
-        <div class="offcanvas-tools">
-            <a class="btn btn-icon-toggle btn-default-light pull-right" ng-click="close($event)">
-                <i class="fa fa-close"></i>
-            </a>
-        </div>
-    </div>
-    <div class="offcanvas-body no-padding" offcanvas-transclude></div>
-</div>
+<div modal-render="{{$isRendered}}" class="offcanvas-pane width-{{ size ? size : 8 }}" ng-class="{'offcanvas-opened': animate}" offcanvas-transclude></div>

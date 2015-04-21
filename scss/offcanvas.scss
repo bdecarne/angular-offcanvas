@@ -83,16 +83,16 @@ body.offcanvas-expanded {
   //max-width: 100%;
   background-color: $offcanvas-bg;
   overflow: auto;
-  @include box-shadow($z-height-0);
-  @include transition-transform($offcanvas-speed-out $offcanvas-ease-out);
+//  @include box-shadow($z-height-0);
+//  @include transition-transform($offcanvas-speed-out $offcanvas-ease-out);
 
-  &.active {
+  //&.active {
     display: block;
     @include box-shadow($z-height-3);
     @include transition-transform($offcanvas-speed-in $offcanvas-ease-in);
-  }
+  //}
 
-  &.in {
+  &.offcanvas-opened {
     &.width-1 {		@include translate(floor($dimensions-steps * 1)*-1, 0);  }
     &.width-2 {		@include translate(floor($dimensions-steps * 2)*-1, 0);  }
     &.width-3 {		@include translate(floor($dimensions-steps * 3)*-1, 0);  }
@@ -106,7 +106,12 @@ body.offcanvas-expanded {
     &.width-11 {		@include translate(floor($dimensions-steps * 11)*-1, 0);  }
     &.width-12 {		@include translate(floor($dimensions-steps * 12)*-1, 0);  }
   }
+
+  &.offcanvas-reduced {
+    @include translate(0, 0);
+  }
 }
+
 .offcanvas:first-child {
   .offcanvas-pane {
     right: 0;
