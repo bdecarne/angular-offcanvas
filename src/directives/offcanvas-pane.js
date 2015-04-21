@@ -1,5 +1,5 @@
 angular.module('angular.offcanvas')
-    .directive('offcanvasPane', ['$offcanvasStack', '$q', '$timeout', function ($offcanvasStack, $q, $timeout) {
+    .directive('offcanvasPane', ['$offcanvasStack', '$q', '$timeout', '$window', function ($offcanvasStack, $q, $timeout, $window) {
         return {
             restrict: 'EA',
             scope: {
@@ -14,14 +14,6 @@ angular.module('angular.offcanvas')
             link: function (scope, element, attrs) {
                 element.addClass(attrs.paneClass || '');
                 scope.size = attrs.size;
-
-                /*scope.close = function (evt) {
-                    var offcanvas = $offcanvasStack.getTop();
-                    if (offcanvas) {
-                        $offcanvasStack.dismiss(offcanvas.key, 'backdrop click');
-                    }
-                };*/
-
 
                 // This property is only added to the scope for the purpose of detecting when this directive is rendered.
                 // We can detect that by using this property in the template associated with this directive and then use
@@ -40,9 +32,16 @@ angular.module('angular.offcanvas')
 
                 offcanvasRenderDeferObj.promise.then(function () {
 
-                    // trigger CSS transitions
                     $timeout(function () {
+                        // eval scrollbar
+                        evalScrollbar();
+                        // trigger CSS transitions
                         scope.animate = true;
+                    });
+
+                    // on resize, evan scrollbar
+                    angular.element($window).bind('resize', function () {
+                        evalScrollbar();
                     });
 
                     var inputsWithAutofocus = element[0].querySelectorAll('[autofocus]');
@@ -66,6 +65,37 @@ angular.module('angular.offcanvas')
                         $offcanvasStack.offcanvasRendered(offcanvas.key);
                     }
                 });
+
+
+                /**
+                 * If nanoscroller jquery plugin is present, initialize in on offcanvas-body
+                 */
+                function evalScrollbar()
+                {
+                    if (!$.isFunction($.fn.nanoScroller)) {
+                        return;
+                    }
+
+                    var menuScroller = $('.offcanvas-body', element);
+                    if(!menuScroller.length) {
+                        menuScroller = $(element).wrapInner('<div class="offcanvas-body"></div>');
+                        menuScroller = $('.offcanvas-body', element);
+                    }
+
+                    var parent = menuScroller.parent();
+
+                    if (parent.hasClass('nano-content') === false) {
+                        menuScroller.wrap('<div class="nano"><div class="nano-content"></div></div>');
+                    }
+
+                    // Set the correct height
+                    var height = $window.innerHeight - $(element).find('.nano').position().top;
+                    var scroller = menuScroller.closest('.nano');
+                    scroller.css({height: height});
+
+                    // Add the nanoscroller
+                    scroller.nanoScroller({preventPageScrolling: true});
+                }
             }
         };
     }]);
