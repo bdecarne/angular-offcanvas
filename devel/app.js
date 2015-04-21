@@ -6,6 +6,7 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 templateUrl: 'myDialog.html',
                 controller: 'DialogInstanceCtrl',
                 size: size,
+                backdrop: true,
                 resolve:{
                     test: function() {
                         return "dfsdf";
@@ -37,5 +38,9 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 }
             });
         };
+
+        //$scope.$on('modal.closing', function(event) {
+        //    event.defaultPrevented = !confirm('Êtes-vous sûr ?');
+        //});
 
     });

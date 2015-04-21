@@ -119,9 +119,9 @@ angular.module('angular.offcanvas')
                     backdropScope.index = currBackdropIndex;
                     var angularBackgroundDomEl = angular.element('<div offcanvas-backdrop="offcanvas-backdrop"></div>');
                     angularBackgroundDomEl.attr('backdrop-class', modal.backdropClass);
-                    //if (modal.animation) {
-                    //    angularBackgroundDomEl.attr('modal-animation', 'true');
-                    //}
+                    if (modal.animation) {
+                        angularBackgroundDomEl.attr('modal-animation', 'true');
+                    }
                     backdropDomEl = $compile(angularBackgroundDomEl)(backdropScope);
                     body.append(backdropDomEl);
                 }

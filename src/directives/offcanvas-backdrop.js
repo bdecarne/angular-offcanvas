@@ -1,5 +1,5 @@
 angular.module('angular.offcanvas')
-    .directive('offcanvasBackdrop', ['$timeout', function ($timeout) {
+    .directive('offcanvasBackdrop', ['$offcanvasStack', '$timeout', function ($offcanvasStack, $timeout) {
         return {
             restrict: 'EA',
             replace: true,
@@ -12,6 +12,15 @@ angular.module('angular.offcanvas')
 
         function linkFn(scope, element, attrs) {
             scope.animate = false;
+
+            scope.close = function (evt) {
+                var modal = $offcanvasStack.getTop();
+                if (modal && modal.value.backdrop && modal.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    $offcanvasStack.dismiss(modal.key, 'backdrop click');
+                }
+            };
 
             //trigger CSS transitions
             $timeout(function () {

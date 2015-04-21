@@ -154,3 +154,15 @@ body.offcanvas-expanded {
   //
   background-color: rgba(#000000, 0.3);
 }
+
+//
+// animations
+// --------------------------------------------------
+
+.fade {
+  opacity: 0;
+  @include transition(opacity .15s linear);
+  &.in {
+    opacity: 1;
+  }
+}
