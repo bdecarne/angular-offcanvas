@@ -2,7 +2,7 @@ angular.module('angular.offcanvas')
     .factory('$offcanvasStack', ['$animate', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
         function ($animate, $timeout, $document, $compile, $rootScope, $$stackedMap) {
 
-            var OPENED_DIALOG_CLASS = 'dialog-open';
+            var OPENED_OFFCANVAS_CLASS = 'offcanvas-expanded';
             var stackDomEl, stackScope;
 
 
@@ -42,7 +42,7 @@ angular.module('angular.offcanvas')
 
                 //remove window DOM element
                 removeAfterAnimate(offcanvasWindow.offcanvasDomEl, offcanvasWindow.offcanvasScope, function() {
-                    body.toggleClass(OPENED_DIALOG_CLASS, openedWindows.length() > 0);
+                    body.toggleClass(OPENED_OFFCANVAS_CLASS, openedWindows.length() > 0);
                     checkRemoveBackdrop();
                 });
             }
@@ -150,7 +150,7 @@ angular.module('angular.offcanvas')
                 openedWindows.top().value.offcanvasDomEl = offcanvasDomEl;
                 $timeout(function() {
                     stackDomEl.append(offcanvasDomEl);
-                    body.addClass(OPENED_DIALOG_CLASS);
+                    body.addClass(OPENED_OFFCANVAS_CLASS);
                 });
             };
 
