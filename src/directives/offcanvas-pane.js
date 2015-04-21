@@ -1,5 +1,5 @@
 angular.module('angular.offcanvas')
-    .directive('offcanvasWindow', ['$offcanvasStack', '$q', '$timeout', function ($offcanvasStack, $q, $timeout) {
+    .directive('offcanvasPane', ['$offcanvasStack', '$q', '$timeout', function ($offcanvasStack, $q, $timeout) {
         return {
             restrict: 'EA',
             scope: {
@@ -9,10 +9,10 @@ angular.module('angular.offcanvas')
             replace: true,
             transclude: true,
             templateUrl: function(tElement, tAttrs) {
-                return tAttrs.templateUrl || 'templates/offcanvas/window.html';
+                return tAttrs.templateUrl || 'templates/offcanvas/pane.html';
             },
             link: function (scope, element, attrs) {
-                element.addClass(attrs.windowClass || '');
+                element.addClass(attrs.paneClass || '');
                 scope.size = attrs.size;
 
                 /*scope.close = function (evt) {

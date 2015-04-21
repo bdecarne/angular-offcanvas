@@ -134,12 +134,10 @@ angular.module('angular.offcanvas')
                     body.append(stackDomEl);
                 }
 
-
-
-                var angularDomEl = angular.element('<div offcanvas-window="offcanvas-window"></div>');
+                var angularDomEl = angular.element('<div offcanvas-pane="offcanvas-pane"></div>');
                 angularDomEl.attr({
-                    'template-url': modal.windowTemplateUrl,
-                    'window-class': modal.windowClass,
+                    'template-url': modal.paneTemplateUrl,
+                    'pane-class': modal.paneClass,
                     'size': modal.size,
                     'index': openedWindows.length() - 1,
                     'animate': 'animate'
