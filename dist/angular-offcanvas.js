@@ -54,7 +54,8 @@ angular.module('angular.offcanvas')
             },
             link: function (scope, element, attrs) {
                 element.addClass(attrs.paneClass || '');
-                scope.size = attrs.size;
+                scope.size = attrs.size || 8;
+                element.addClass('width-' + scope.size);
 
                 // This property is only added to the scope for the purpose of detecting when this directive is rendered.
                 // We can detect that by using this property in the template associated with this directive and then use
@@ -70,6 +71,12 @@ angular.module('angular.offcanvas')
                         offcanvasRenderDeferObj.resolve();
                     }
                 });
+
+
+                attrs.$observe('offcanvasSize', function (value) {
+                    element.addClass(attrs.paneClass || '');
+                });
+
 
                 offcanvasRenderDeferObj.promise.then(function () {
 
@@ -583,7 +590,7 @@ angular.module('angular.offcanvas').run(['$templateCache', function($templateCac
 
 angular.module('angular.offcanvas').run(['$templateCache', function($templateCache) {
   $templateCache.put('templates/offcanvas/pane.html',
-    '<div offcanvas-render="{{$isRendered}}" class="offcanvas-pane width-{{ size ? size : 8 }}" ng-class="{\'offcanvas-opened\': animate}" offcanvas-transclude=""></div>');
+    '<div offcanvas-render="{{$isRendered}}" class="offcanvas-pane" ng-class="{\'offcanvas-opened\': animate}" offcanvas-transclude=""></div>');
 }]);
 
 angular.module('angular.offcanvas').run(['$templateCache', function($templateCache) {
