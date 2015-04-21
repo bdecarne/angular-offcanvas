@@ -13,8 +13,8 @@ angular.module('angular.offcanvas')
             },
             link: function (scope, element, attrs) {
                 element.addClass(attrs.paneClass || '');
-                scope.size = attrs.size || 8;
-                element.addClass('width-' + scope.size);
+                scope.size = attrs.size;
+                //element.addClass('width-' + scope.size);
 
                 // This property is only added to the scope for the purpose of detecting when this directive is rendered.
                 // We can detect that by using this property in the template associated with this directive and then use
