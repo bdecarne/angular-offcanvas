@@ -7,6 +7,7 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 controller: 'DialogInstanceCtrl',
                 size: size,
                 backdrop: false,
+                windowClass:'ezer',
                 resolve:{
                     test: function() {
                         return "dfsdf";

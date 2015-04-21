@@ -107,8 +107,8 @@ angular.module('angular.offcanvas')
                                 backdrop: offcanvasOptions.backdrop,
                                 keyboard: offcanvasOptions.keyboard,
                                 backdropClass: offcanvasOptions.backdropClass,
-                                windowClass: offcanvasOptions.windowClass,
-                                windowTemplateUrl: offcanvasOptions.windowTemplateUrl,
+                                paneClass: offcanvasOptions.paneClass,
+                                paneTemplateUrl: offcanvasOptions.paneTemplateUrl,
                                 size: offcanvasOptions.size,
                                 target: offcanvasOptions.target
                             });
