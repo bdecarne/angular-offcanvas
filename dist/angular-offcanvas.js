@@ -120,14 +120,14 @@ angular.module('angular.offcanvas')
                  */
                 function evalScrollbar()
                 {
-                    if (!$.isFunction($.fn.nanoScroller)) {
+                    if (typeof jQuery == "undefined" || !jQuery.isFunction(jQuery.fn.nanoScroller)) {
                         return;
                     }
 
-                    var menuScroller = $('.offcanvas-body', element);
+                    var menuScroller = jQuery('.offcanvas-body', element);
                     if(!menuScroller.length) {
-                        menuScroller = $(element).wrapInner('<div class="offcanvas-body"></div>');
-                        menuScroller = $('.offcanvas-body', element);
+                        menuScroller = jQuery(element).wrapInner('<div class="offcanvas-body"></div>');
+                        menuScroller = jQuery('.offcanvas-body', element);
                     }
 
                     var parent = menuScroller.parent();
@@ -137,7 +137,7 @@ angular.module('angular.offcanvas')
                     }
 
                     // Set the correct height
-                    var height = $window.innerHeight - $(element).find('.nano').position().top;
+                    var height = $window.innerHeight - jQuery(element).find('.nano').position().top;
                     var scroller = menuScroller.closest('.nano');
                     scroller.css({height: height});
 
