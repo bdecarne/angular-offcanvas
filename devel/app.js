@@ -7,10 +7,35 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 controller: 'DialogInstanceCtrl',
                 size: size,
                 backdrop: false,
-                paneClass:'my-class',
+                target: 'my-id',
+                dismissAll: false,
                 resolve:{
                     test: function() {
-                        return "dfsdf";
+                        return "1";
+                    }
+                }
+            });
+
+            instance.result.then(function (selectedItem) {
+                //$log.info('Modal validated at: ' + new Date());
+            }, function () {
+                //$log.info('Modal dismissed at: ' + new Date());
+            });
+
+        };
+
+        $scope.open2 = function(size) {
+
+            var instance = $offcanvas.open({
+                templateUrl: 'myDialog.html',
+                controller: 'DialogInstanceCtrl',
+                size: size,
+                backdrop: false,
+                target: 'my-id2',
+                dismissAll: false,
+                resolve:{
+                    test: function() {
+                        return "2";
                     }
                 }
             });

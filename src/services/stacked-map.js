@@ -43,6 +43,9 @@ angular.module('angular.offcanvas')
                     },
                     length: function () {
                         return stack.length;
+                    },
+                    all: function () {
+                        return stack;
                     }
                 };
             }

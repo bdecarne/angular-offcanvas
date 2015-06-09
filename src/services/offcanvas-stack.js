@@ -111,7 +111,8 @@ angular.module('angular.offcanvas')
                     renderDeferred: offcanvas.renderDeferred,
                     offcanvasScope: offcanvas.scope,
                     backdrop: offcanvas.backdrop,
-                    keyboard: offcanvas.keyboard
+                    keyboard: offcanvas.keyboard,
+                    target: offcanvas.target
                 });
 
                 var body = $document.find('body').eq(0),
@@ -162,6 +163,13 @@ angular.module('angular.offcanvas')
                 return !offcanvasWindow.value.offcanvasScope.$broadcast('offcanvas.closing', resultOrReason, closing).defaultPrevented;
             }
 
+            /**
+             * Close
+             *
+             * @param offcanvasInstance
+             * @param result
+             * @returns {boolean}
+             */
             $offcanvasStack.close = function (offcanvasInstance, result) {
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if (offcanvasWindow && broadcastClosing(offcanvasWindow, result, true)) {
@@ -172,6 +180,13 @@ angular.module('angular.offcanvas')
                 return !offcanvasWindow;
             };
 
+            /**
+             * Dismiss
+             *
+             * @param offcanvasInstance
+             * @param reason
+             * @returns {boolean}
+             */
             $offcanvasStack.dismiss = function (offcanvasInstance, reason) {
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if (offcanvasWindow && broadcastClosing(offcanvasWindow, reason, false)) {
@@ -182,6 +197,11 @@ angular.module('angular.offcanvas')
                 return !offcanvasWindow;
             };
 
+            /**
+             * Reduce
+             *
+             * @param offcanvasInstance
+             */
             $offcanvasStack.reduce = function (offcanvasInstance) {
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if(offcanvasWindow) {
@@ -190,6 +210,11 @@ angular.module('angular.offcanvas')
                 }
             };
 
+            /**
+             * Extend
+             *
+             * @param offcanvasInstance
+             */
             $offcanvasStack.extend = function (offcanvasInstance) {
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if(offcanvasWindow) {
@@ -198,6 +223,11 @@ angular.module('angular.offcanvas')
                 }
             };
 
+            /**
+             * Dismiss all
+             *
+             * @param reason
+             */
             $offcanvasStack.dismissAll = function (reason) {
                 var topOffcanvas = this.getTop();
                 while (topOffcanvas && this.dismiss(topOffcanvas.key, reason)) {
@@ -205,10 +235,68 @@ angular.module('angular.offcanvas')
                 }
             };
 
+            /**
+             * Get top offcanvas
+             *
+             * @returns {*}
+             */
             $offcanvasStack.getTop = function () {
                 return openedWindows.top();
             };
 
+            /**
+             * Get instance by target id
+             *
+             * @param target
+             * @returns {*}
+             */
+            $offcanvasStack.getByTarget = function (target) {
+                var keys = openedWindows.keys();
+                for(var i=0; i<keys.length; i++) {
+                    var opened = openedWindows.get(keys[i]);
+                    if(opened.value.target && opened.value.target == target) {
+                        return keys[i];
+                    }
+                }
+            };
+
+            /**
+             * Set an offcanvas to top position
+             *
+             * @param target
+             * @returns {*}
+             */
+            $offcanvasStack.setTop = function (offcanvasInstance) {
+                var offcanvasWindow = openedWindows.get(offcanvasInstance);
+                if(offcanvasWindow) {
+                    var offcanvasDomEl = offcanvasWindow.value.offcanvasDomEl;
+                    $timeout(function() {
+                        //stackDomEl.append(offcanvasDomEl);
+                        openedWindows.remove(offcanvasInstance);
+                        openedWindows.add(offcanvasWindow.key, offcanvasWindow.value);
+                        $offcanvasStack.resetIndexAttributes();
+                    });
+                }
+            };
+
+            /**
+             * Set an offcanvas to top position
+             *
+             * @param target
+             * @returns {*}
+             */
+            $offcanvasStack.resetIndexAttributes = function () {
+                var keys = openedWindows.keys();
+                for(var i=0; i<keys.length; i++) {
+                    var offcanvasWindow = openedWindows.get(keys[i]);
+                    var offcanvasDomEl = offcanvasWindow.value.offcanvasDomEl;
+                    offcanvasDomEl.attr('index', i);
+                }
+            };
+
+            /**
+             * @param offcanvasInstance
+             */
             $offcanvasStack.offcanvasRendered = function (offcanvasInstance) {
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if (offcanvasWindow) {

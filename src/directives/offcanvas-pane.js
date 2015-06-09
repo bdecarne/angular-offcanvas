@@ -31,11 +31,17 @@ angular.module('angular.offcanvas')
                     }
                 });
 
-
+                // observe offcanvasSize
                 attrs.$observe('offcanvasSize', function (value) {
                     element.addClass(attrs.paneClass || '');
                 });
 
+                // watch index attribute
+                scope.$watch(function(){
+                    return element.attr('index');
+                }, function(value){
+                    element.css({zIndex: 1050 + value});
+                });
 
                 offcanvasRenderDeferObj.promise.then(function () {
 

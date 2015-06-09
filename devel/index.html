@@ -15,6 +15,7 @@
 
     <body ng-app="App" ng-controller="TestController">
         <a href="" ng-click="open()">open</a>
+        <a href="" ng-click="open2()">open</a>
 
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed finibus nisl felis, et mattis nisi euismod
@@ -246,7 +247,7 @@
     <script type="text/ng-template" id="myDialog.html">
 
         <div class="offcanvas-head">
-            <header class="text-primary">Search</header>
+            <header class="text-primary">Search {{ test }}</header>
             <div class="offcanvas-tools">
                 <a class="btn pull-right" ng-click="instance.close($event)">
                     <i class="fa fa-arrow-left" ng-if="instance.parent"></i>
@@ -283,34 +284,6 @@
                 Suspendisse blandit massa a ligula congue commodo. Integer tempus tristique sollicitudin. Quisque
                 consequat, est vel tempus dapibus, quam risus tempor odio, et consectetur sapien neque sit amet est.
             </p>
-
-            <p>Mauris consectetur neque vel condimentum cursus. Cras dolor felis, vestibulum sit amet elementum nec,
-                facilisis nec lectus. Maecenas malesuada sed risus quis gravida. Quisque lacinia aliquet turpis, ut
-                dictum purus faucibus at. Etiam euismod tempus metus, eu imperdiet felis egestas vitae. Phasellus at
-                vehicula leo. Morbi tempus justo accumsan leo iaculis, vel vestibulum eros mollis. Vivamus tempor nulla
-                ut sapien convallis, pulvinar vulputate quam scelerisque. Maecenas aliquam pretium neque, vitae molestie
-                felis pharetra et. Sed aliquet enim nec lectus auctor, eu eleifend est ultrices. Donec congue ex ac
-                pellentesque faucibus. Nunc vulputate in nisl ut eleifend. Suspendisse gravida ut sapien at semper.
-                Vestibulum hendrerit semper nibh ac finibus.
-            </p>
-
-            <p>Nam at commodo augue, a porttitor leo. Vivamus efficitur ligula ornare lacus elementum convallis. Fusce
-                auctor pretium pretium. Ut velit nibh, tincidunt non sollicitudin at, fermentum vitae risus. Sed at
-                convallis risus, sit amet porta mauris. Phasellus lacinia iaculis venenatis. Nam in quam nec arcu mattis
-                tincidunt sit amet at ante. Sed in lacus tristique, consectetur enim sed, blandit nisl. In hac habitasse
-                platea dictumst. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin sapien tellus,
-                tincidunt a efficitur auctor, scelerisque ac nisi. Pellentesque in ligula varius, tempus massa et,
-                consectetur mauris. Aliquam pharetra cursus purus, in fringilla urna euismod sit amet.
-            </p>
-
-            <p> Vestibulum mattis quis ligula maximus pulvinar. Integer ac sapien sed mauris laoreet hendrerit tincidunt
-                sed sapien. Fusce sodales sodales tortor id semper. Vivamus finibus velit ornare lacus molestie posuere.
-                Etiam efficitur, sem accumsan posuere accumsan, tortor mi lacinia sem, eget efficitur magna eros ac
-                nunc. Phasellus lobortis libero turpis. Cras euismod sollicitudin dapibus. Pellentesque habitant morbi
-                tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas et scelerisque magna. Nullam
-                tincidunt quam nec leo facilisis, nec convallis massa interdum.
-            </p>
-
 
             <a href="" ng-click="open(12)">open</a>
 

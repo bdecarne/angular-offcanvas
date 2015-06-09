@@ -4,7 +4,8 @@ angular.module('angular.offcanvas')
             options: {
                 animation: true,
                 backdrop: false, //can be also false or 'static'
-                keyboard: true
+                keyboard: true,
+                dismissAll: true
             },
             $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$offcanvasStack',
                 function ($injector, $rootScope, $q, $http, $templateCache, $controller, $offcanvasStack) {
@@ -29,8 +30,23 @@ angular.module('angular.offcanvas')
                         return promisesArr;
                     }
 
+                    /**
+                     * open a canvas
+                     * @param offcanvasOptions
+                     * @returns {*}
+                     */
                     $offcanvas.open = function (offcanvasOptions) {
 
+                        // if there is a target key, check for opened offcanvas with the same target
+                        if(offcanvasOptions.target) {
+                            var offcanvasInstance = $offcanvasStack.getByTarget(offcanvasOptions.target);
+                            if(offcanvasInstance) {
+                                $offcanvasStack.setTop(offcanvasInstance);
+                                return offcanvasInstance;
+                            }
+                        }
+
+                        // prepare promises
                         var offcanvasResultDeferred = $q.defer();
                         var offcanvasOpenedDeferred = $q.defer();
                         var offcanvasRenderDeferred = $q.defer();
@@ -89,13 +105,13 @@ angular.module('angular.offcanvas')
                                 }
                             }
 
-
                             if(offcanvasInstance.parent) {
                                 $offcanvasStack.reduce(offcanvasInstance.parent);
                             } else {
-                                $offcanvasStack.dismissAll();
+                                if(offcanvasOptions.dismissAll) {
+                                    $offcanvasStack.dismissAll();
+                                }
                             }
-
 
                             $offcanvasStack.open(offcanvasInstance, {
                                 scope: offcanvasScope,
