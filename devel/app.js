@@ -24,29 +24,6 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
 
         };
 
-        $scope.open2 = function(size) {
-
-            var instance = $offcanvas.open({
-                templateUrl: 'myDialog.html',
-                controller: 'DialogInstanceCtrl',
-                size: size,
-                backdrop: false,
-                target: 'my-id2',
-                dismissAll: false,
-                resolve:{
-                    test: function() {
-                        return "2";
-                    }
-                }
-            });
-
-            instance.result.then(function (selectedItem) {
-                //$log.info('Modal validated at: ' + new Date());
-            }, function () {
-                //$log.info('Modal dismissed at: ' + new Date());
-            });
-
-        };
     })
     .controller('DialogInstanceCtrl', function($scope, $offcanvas, $offcanvasInstance, test) {
         $scope.test = test;
