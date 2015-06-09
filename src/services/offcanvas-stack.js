@@ -145,7 +145,8 @@ angular.module('angular.offcanvas')
                     'pane-class': offcanvas.paneClass,
                     'size': offcanvas.size,
                     'index': openedWindows.length() - 1,
-                    'animate': 'animate'
+                    'animate': 'animate',
+                    'position': offcanvas.position
                 }).html(offcanvas.content);
                 if (offcanvas.animation) {
                     angularDomEl.attr('offcanvas-animation', 'true');

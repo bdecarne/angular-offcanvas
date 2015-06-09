@@ -54,6 +54,8 @@ angular.module('angular.offcanvas')
             },
             link: function (scope, element, attrs) {
                 element.addClass(attrs.paneClass || '');
+                element.addClass(attrs.position);
+
                 scope.size = attrs.size;
                 //element.addClass('width-' + scope.size);
 
@@ -332,7 +334,8 @@ angular.module('angular.offcanvas')
                     'pane-class': offcanvas.paneClass,
                     'size': offcanvas.size,
                     'index': openedWindows.length() - 1,
-                    'animate': 'animate'
+                    'animate': 'animate',
+                    'position': offcanvas.position
                 }).html(offcanvas.content);
                 if (offcanvas.animation) {
                     angularDomEl.attr('offcanvas-animation', 'true');
@@ -500,7 +503,8 @@ angular.module('angular.offcanvas')
                 animation: true,
                 backdrop: false, //can be also false or 'static'
                 keyboard: true,
-                dismissAll: true
+                dismissAll: true,
+                position: 'right'
             },
             $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$offcanvasStack',
                 function ($injector, $rootScope, $q, $http, $templateCache, $controller, $offcanvasStack) {
@@ -561,12 +565,19 @@ angular.module('angular.offcanvas')
 
                         // inject parent
                         if(offcanvasOptions.parent) {
+                            // if the parent has a position, heritate
+                            if(!offcanvasOptions.position && offcanvasOptions.parent.options.position) {
+                                offcanvasOptions.position = offcanvasOptions.parent.options.position;
+                            }
                             offcanvasInstance.parent = offcanvasOptions.parent;
                         }
 
                         //merge and clean up options
                         offcanvasOptions = angular.extend({}, $offcanvasProvider.options, offcanvasOptions);
                         offcanvasOptions.resolve = offcanvasOptions.resolve || {};
+
+                        // attach the options to the instance
+                        offcanvasInstance.options = offcanvasOptions;
 
                         //verify options
                         if (!offcanvasOptions.template && !offcanvasOptions.templateUrl) {
@@ -621,7 +632,8 @@ angular.module('angular.offcanvas')
                                 paneClass: offcanvasOptions.paneClass,
                                 paneTemplateUrl: offcanvasOptions.paneTemplateUrl,
                                 size: offcanvasOptions.size,
-                                target: offcanvasOptions.target
+                                target: offcanvasOptions.target,
+                                position: offcanvasOptions.position
                             });
 
                         }, function resolveError(reason) {
@@ -708,5 +720,5 @@ angular.module('angular.offcanvas').run(['$templateCache', function($templateCac
 
 angular.module('angular.offcanvas').run(['$templateCache', function($templateCache) {
   $templateCache.put('templates/offcanvas/stack.html',
-    '<div class="offcanvas"></div>');
+    '<div class="offcanvas-stack"></div>');
 }]);

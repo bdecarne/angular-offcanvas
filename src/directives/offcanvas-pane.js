@@ -13,6 +13,8 @@ angular.module('angular.offcanvas')
             },
             link: function (scope, element, attrs) {
                 element.addClass(attrs.paneClass || '');
+                element.addClass(attrs.position);
+
                 scope.size = attrs.size;
                 //element.addClass('width-' + scope.size);
 

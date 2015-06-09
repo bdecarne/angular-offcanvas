@@ -8,6 +8,7 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 size: size,
                 backdrop: false,
                 target: 'my-id',
+                //position: 'left',
                 dismissAll: false,
                 resolve:{
                     test: function() {

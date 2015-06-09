@@ -5,7 +5,8 @@ angular.module('angular.offcanvas')
                 animation: true,
                 backdrop: false, //can be also false or 'static'
                 keyboard: true,
-                dismissAll: true
+                dismissAll: true,
+                position: 'right'
             },
             $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$offcanvasStack',
                 function ($injector, $rootScope, $q, $http, $templateCache, $controller, $offcanvasStack) {
@@ -66,12 +67,19 @@ angular.module('angular.offcanvas')
 
                         // inject parent
                         if(offcanvasOptions.parent) {
+                            // if the parent has a position, heritate
+                            if(!offcanvasOptions.position && offcanvasOptions.parent.options.position) {
+                                offcanvasOptions.position = offcanvasOptions.parent.options.position;
+                            }
                             offcanvasInstance.parent = offcanvasOptions.parent;
                         }
 
                         //merge and clean up options
                         offcanvasOptions = angular.extend({}, $offcanvasProvider.options, offcanvasOptions);
                         offcanvasOptions.resolve = offcanvasOptions.resolve || {};
+
+                        // attach the options to the instance
+                        offcanvasInstance.options = offcanvasOptions;
 
                         //verify options
                         if (!offcanvasOptions.template && !offcanvasOptions.templateUrl) {
@@ -126,7 +134,8 @@ angular.module('angular.offcanvas')
                                 paneClass: offcanvasOptions.paneClass,
                                 paneTemplateUrl: offcanvasOptions.paneTemplateUrl,
                                 size: offcanvasOptions.size,
-                                target: offcanvasOptions.target
+                                target: offcanvasOptions.target,
+                                position: offcanvasOptions.position
                             });
 
                         }, function resolveError(reason) {

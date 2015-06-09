@@ -17,8 +17,9 @@ $offcanvas-speed-in:			.5s;
 $offcanvas-ease-out:			ease-in;
 $offcanvas-speed-out:			.33s;
 
-$offcanvas-title-size:					20px;
-$dimensions-steps:				40px;
+$offcanvas-title-size:			    20px;
+$offcanvas-dimensions-steps:	    12;
+$offcanvas-dimensions-step-width:	40px;
 
 @mixin box-shadow($shadow...) {
   -webkit-box-shadow: $shadow; // iOS <4.3 & Android <4.1
@@ -45,45 +46,37 @@ $dimensions-steps:				40px;
   transition: $transition;
 }
 
-.width-1 {		width: floor($dimensions-steps * 1); }
-.width-2 {		width: floor($dimensions-steps * 2); }
-.width-3 {		width: floor($dimensions-steps * 3); }
-.width-4 {		width: floor($dimensions-steps * 4); }
-.width-5 {		width: floor($dimensions-steps * 5); }
-.width-6 {		width: floor($dimensions-steps * 6); }
-.width-7 {		width: floor($dimensions-steps * 7); }
-.width-8 {		width: floor($dimensions-steps * 8); }
-.width-9 {		width: floor($dimensions-steps * 9); }
-.width-10 {	width: floor($dimensions-steps * 10); }
-.width-11 {	width: floor($dimensions-steps * 11); }
-.width-12 {	width: floor($dimensions-steps * 12); }
+@for $i from 1 through $offcanvas-dimensions-steps {
+  &.width-#{$i} {
+    width: floor($offcanvas-dimensions-step-width * $i);
+  }
+}
 
 // General styles
 // -------------------------
 
-.offcanvas {
+/*
+.offcanvas-stack {
   position: fixed;
   top: 0; bottom: 0;
-  right: 0;
   z-index: $zindex-offcanvas;
+  right: 0;
+  left: auto;
+  border:5px solid red;
 }
+*/
 
 body.offcanvas-with-backdrop {
   overflow: hidden;
 }
 
-.offcanvas:first-child {
-  left: 0;
-  right: auto;
-}
-
-
 // Pane
 // -------------------------
 
 .offcanvas-pane {
-  position: absolute;
-  top: 0; bottom: 0;
+  position: fixed;
+  top: 0;
+  bottom: 0;
   min-width: 8px;
   //max-width: 100%;
   background-color: $offcanvas-bg;
@@ -97,19 +90,23 @@ body.offcanvas-with-backdrop {
     @include transition-transform($offcanvas-speed-in $offcanvas-ease-in);
   //}
 
-  &.offcanvas-opened {
-    &.width-1 {		@include translate(floor($dimensions-steps * 1)*-1, 0);  }
-    &.width-2 {		@include translate(floor($dimensions-steps * 2)*-1, 0);  }
-    &.width-3 {		@include translate(floor($dimensions-steps * 3)*-1, 0);  }
-    &.width-4 {		@include translate(floor($dimensions-steps * 4)*-1, 0);  }
-    &.width-5 {		@include translate(floor($dimensions-steps * 5)*-1, 0);  }
-    &.width-6 {		@include translate(floor($dimensions-steps * 6)*-1, 0);  }
-    &.width-7 {		@include translate(floor($dimensions-steps * 7)*-1, 0);  }
-    &.width-8 {		@include translate(floor($dimensions-steps * 8)*-1, 0);  }
-    &.width-9 {		@include translate(floor($dimensions-steps * 9)*-1, 0);  }
-    &.width-10 {		@include translate(floor($dimensions-steps * 10)*-1, 0);  }
-    &.width-11 {		@include translate(floor($dimensions-steps * 11)*-1, 0);  }
-    &.width-12 {		@include translate(floor($dimensions-steps * 12)*-1, 0);  }
+  @for $i from 1 through $offcanvas-dimensions-steps {
+    &.width-#{$i} {
+      &.right {
+        right:floor($offcanvas-dimensions-step-width * $i)*-1;
+      }
+      &.left {
+        left:floor($offcanvas-dimensions-step-width * $i)*-1;
+      }
+      &.offcanvas-opened {
+        &.right {
+          @include translate(floor($offcanvas-dimensions-step-width * $i)*-1, 0);
+        }
+        &.left {
+          @include translate(floor($offcanvas-dimensions-step-width * $i), 0);
+        }
+      }
+    }
   }
 
   &.offcanvas-reduced {
@@ -117,20 +114,12 @@ body.offcanvas-with-backdrop {
   }
 }
 
-.offcanvas:first-child {
-  .offcanvas-pane {
-    right: 0;
-  }
-}
-
-
 // Offcanvas body
 // -------------------------
 
 .offcanvas-body {
   padding: 16px;
 }
-
 
 // Offcanvas head
 // -------------------------
