@@ -8,8 +8,9 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 size: size,
                 backdrop: false,
                 target: 'my-id',
+                paneClass: 'test',
                 //position: 'left',
-                dismissAll: false,
+                //dismissAll: false,
                 resolve:{
                     test: function() {
                         return "1";
@@ -35,7 +36,8 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 controller: 'DialogInstanceCtrl',
                 parent: $offcanvasInstance,
                 size: size,
-                backdrop: true,
+                paneClass: 'test2',
+                //backdrop: true,
                 resolve:{
                     test: function() {
                         return "dfsdf";

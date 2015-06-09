@@ -33,13 +33,21 @@ angular.module('angular.offcanvas')
                 var body = $document.find('body').eq(0);
                 var offcanvasWindow = openedWindows.get(offcanvasInstance).value;
 
-                //clean up the stack
-                openedWindows.remove(offcanvasInstance);
-
-                //if there is parent instance, extend it
+                // if there is parent instance, extend it
                 if(offcanvasInstance.parent) {
                     $offcanvasStack.extend(offcanvasInstance.parent);
                 }
+
+                // if there is any child instance, close it too
+                var keys = openedWindows.keys();
+                for(var i = 0; i < keys.length; i++) {
+                    if(keys[i].parent == offcanvasInstance) {
+                        $offcanvasStack.close(keys[i]);
+                    }
+                }
+
+                //clean up the stack
+                openedWindows.remove(offcanvasInstance);
 
                 //remove window DOM element
                 removeAfterAnimate(offcanvasWindow.offcanvasDomEl, offcanvasWindow.offcanvasScope, function() {
