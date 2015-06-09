@@ -34,6 +34,9 @@
 .width-12 {
   width: 480px; }
 
+.offcanvas-stack {
+  display: table; }
+
 /*
 .offcanvas-stack {
   position: fixed;
@@ -49,12 +52,12 @@ body.offcanvas-with-backdrop {
 
 .offcanvas-pane {
   position: fixed;
+  display: block;
   top: 0;
   bottom: 0;
   min-width: 8px;
   background-color: #FFF;
   overflow: auto;
-  display: block;
   box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.38);
   -webkit-transition: -webkit-transform 0.5s cubic-bezier(.22, .99, .68, .98);
   transition: transform 0.5s cubic-bezier(.22, .99, .68, .98); }
@@ -202,10 +205,6 @@ body.offcanvas-with-backdrop {
     -webkit-transform: translate(480px, 0);
     -ms-transform: translate(480px, 0);
     transform: translate(480px, 0); }
-  .offcanvas-pane.offcanvas-reduced {
-    -webkit-transform: translate(0, 0);
-    -ms-transform: translate(0, 0);
-    transform: translate(0, 0); }
 
 .offcanvas-body {
   padding: 16px; }

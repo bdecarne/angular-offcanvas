@@ -55,6 +55,9 @@ $offcanvas-dimensions-step-width:	40px;
 // General styles
 // -------------------------
 
+.offcanvas-stack {
+  display: table;
+}
 /*
 .offcanvas-stack {
   position: fixed;
@@ -75,6 +78,7 @@ body.offcanvas-with-backdrop {
 
 .offcanvas-pane {
   position: fixed;
+  display: block;
   top: 0;
   bottom: 0;
   min-width: 8px;
@@ -84,11 +88,8 @@ body.offcanvas-with-backdrop {
 //  @include box-shadow($z-height-0);
 //  @include transition-transform($offcanvas-speed-out $offcanvas-ease-out);
 
-  //&.active {
-    display: block;
-    @include box-shadow($z-height-3);
-    @include transition-transform($offcanvas-speed-in $offcanvas-ease-in);
-  //}
+  @include box-shadow($z-height-3);
+  @include transition-transform($offcanvas-speed-in $offcanvas-ease-in);
 
   @for $i from 1 through $offcanvas-dimensions-steps {
     &.width-#{$i} {
@@ -109,9 +110,9 @@ body.offcanvas-with-backdrop {
     }
   }
 
-  &.offcanvas-reduced {
-    @include translate(0, 0);
-  }
+//  &.offcanvas-reduced {
+//    @include translate(0, 0);
+//  }
 }
 
 // Offcanvas body
