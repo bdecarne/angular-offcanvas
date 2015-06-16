@@ -1,8 +1,11 @@
 angular.module('App', ['angular.offcanvas', 'ngAnimate'])
     .controller('TestController', function($scope, $offcanvas) {
-        $scope.open = function(size) {
+        var instance;
 
-            var instance = $offcanvas.open({
+
+
+        $scope.open = function(size) {
+            instance = $offcanvas.open({
                 templateUrl: 'myDialog.html',
                 controller: 'DialogInstanceCtrl',
                 size: size,
@@ -17,13 +20,20 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                     }
                 }
             });
-
             instance.result.then(function (selectedItem) {
                 //$log.info('Modal validated at: ' + new Date());
             }, function () {
                 //$log.info('Modal dismissed at: ' + new Date());
             });
+        };
 
+
+        $scope.close = function() {
+            if(instance) {
+                instance.close().then(function() {
+                   console.log('fermé !');
+                });
+            }
         };
 
     })
