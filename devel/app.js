@@ -30,9 +30,10 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
 
         $scope.close = function() {
             if(instance) {
-                instance.close().then(function() {
-                   console.log('fermé !');
+                instance.closed.then(function() {
+                    console.log('closed !');
                 });
+                instance.close();
             }
         };
 

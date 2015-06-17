@@ -28,7 +28,7 @@ angular.module('angular.offcanvas')
                 }
             });
 
-            function removeOffcanvasWindow(offcanvasInstance) {
+            function removeOffcanvasWindow(offcanvasInstance, closedCallback) {
 
                 var body = $document.find('body').eq(0);
                 var offcanvasWindow = openedWindows.get(offcanvasInstance).value;
@@ -53,6 +53,9 @@ angular.module('angular.offcanvas')
                 removeAfterAnimate(offcanvasWindow.offcanvasDomEl, offcanvasWindow.offcanvasScope, function() {
                     body.toggleClass(OPENED_OFFCANVAS_CLASS, openedWindows.length() > 0);
                     checkRemoveBackdrop();
+                    if(closedCallback) {
+                        closedCallback();
+                    }
                 });
             }
 
@@ -117,6 +120,7 @@ angular.module('angular.offcanvas')
                 openedWindows.add(offcanvasInstance, {
                     deferred: offcanvas.deferred,
                     renderDeferred: offcanvas.renderDeferred,
+                    closedDeferred: offcanvas.closedDeferred,
                     offcanvasScope: offcanvas.scope,
                     backdrop: offcanvas.backdrop,
                     keyboard: offcanvas.keyboard,
@@ -183,7 +187,9 @@ angular.module('angular.offcanvas')
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if (offcanvasWindow && broadcastClosing(offcanvasWindow, result, true)) {
                     offcanvasWindow.value.deferred.resolve(result);
-                    removeOffcanvasWindow(offcanvasInstance);
+                    removeOffcanvasWindow(offcanvasInstance, function() {
+                        offcanvasWindow.value.closedDeferred.resolve();
+                    });
                     return true;
                 }
                 return !offcanvasWindow;
@@ -200,7 +206,9 @@ angular.module('angular.offcanvas')
                 var offcanvasWindow = openedWindows.get(offcanvasInstance);
                 if (offcanvasWindow && broadcastClosing(offcanvasWindow, reason, false)) {
                     offcanvasWindow.value.deferred.reject(reason);
-                    removeOffcanvasWindow(offcanvasInstance);
+                    removeOffcanvasWindow(offcanvasInstance, function() {
+                        offcanvasWindow.value.closedDeferred.resolve();
+                    });
                     return true;
                 }
                 return !offcanvasWindow;

@@ -51,12 +51,14 @@ angular.module('angular.offcanvas')
                         var offcanvasResultDeferred = $q.defer();
                         var offcanvasOpenedDeferred = $q.defer();
                         var offcanvasRenderDeferred = $q.defer();
+                        var offcanvasClosedDeferred = $q.defer();
 
                         //prepare an instance of a offcanvas to be injected into controllers and returned to a caller
                         var offcanvasInstance = {
                             result: offcanvasResultDeferred.promise,
                             opened: offcanvasOpenedDeferred.promise,
                             rendered: offcanvasRenderDeferred.promise,
+                            closed: offcanvasClosedDeferred.promise,
                             close: function (result) {
                                 return $offcanvasStack.close(offcanvasInstance, result);
                             },
@@ -125,6 +127,7 @@ angular.module('angular.offcanvas')
                                 scope: offcanvasScope,
                                 deferred: offcanvasResultDeferred,
                                 renderDeferred: offcanvasRenderDeferred,
+                                closedDeferred: offcanvasClosedDeferred,
                                 content: tplAndVars[0],
                                 parent: offcanvasOptions.parent,
                                 animation: offcanvasOptions.animation,
