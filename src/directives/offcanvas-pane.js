@@ -104,7 +104,10 @@ angular.module('angular.offcanvas')
                     }
 
                     // Set the correct height
-                    var height = $window.innerHeight - jQuery(element).find('.nano').position().top;
+                    //var height = $window.innerHeight - jQuery(element).find('.nano').position().top;
+                    var nano = jQuery(element).find('.nano');
+                    var height = nano.parent().innerHeight() - (nano.position().top - nano.parent().position().top);
+
                     var scroller = menuScroller.closest('.nano');
                     scroller.css({height: height});
 
