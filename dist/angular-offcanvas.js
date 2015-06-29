@@ -350,8 +350,7 @@ angular.module('angular.offcanvas')
                     'size': offcanvas.size,
                     'index': openedWindows.length() - 1,
                     'animate': 'animate',
-                    'position': offcanvas.position,
-                    'close-on-outside-click': offcanvas.closeOnOutsideClick
+                    'position': offcanvas.position
                 }).html(offcanvas.content);
                 if (offcanvas.animation) {
                     angularDomEl.attr('offcanvas-animation', 'true');
@@ -377,7 +376,7 @@ angular.module('angular.offcanvas')
                                 }
                                 level++;
                             }
-                            offcanvasInstance.close();
+                            offcanvasInstance.dismiss();
                             angular.element(this).off(event);
                         });
                     };
