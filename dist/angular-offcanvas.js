@@ -132,7 +132,7 @@ angular.module('angular.offcanvas')
                                     }
                                     level++;
                                 }
-                                $offcanvasStack.close(offcanvas.key);
+                                $offcanvasStack.getTop().key.close();
                                 angular.element(this).off(event);
                             });
                         });
