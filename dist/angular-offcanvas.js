@@ -376,7 +376,9 @@ angular.module('angular.offcanvas')
                                 }
                                 level++;
                             }
-                            offcanvasInstance.dismiss();
+                            $rootScope.$apply(function () {
+                                offcanvasInstance.dismiss('click outside');
+                            });
                             angular.element(this).off(event);
                         });
                     };
