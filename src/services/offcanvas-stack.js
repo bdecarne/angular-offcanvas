@@ -158,7 +158,8 @@ angular.module('angular.offcanvas')
                     'size': offcanvas.size,
                     'index': openedWindows.length() - 1,
                     'animate': 'animate',
-                    'position': offcanvas.position
+                    'position': offcanvas.position,
+                    'close-on-outside-click': offcanvas.closeOnOutsideClick
                 }).html(offcanvas.content);
                 if (offcanvas.animation) {
                     angularDomEl.attr('offcanvas-animation', 'true');

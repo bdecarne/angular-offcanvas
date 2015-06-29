@@ -10,6 +10,7 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
                 controller: 'DialogInstanceCtrl',
                 size: size,
                 backdrop: false,
+                closeOnOutsideClick: false,
                 target: 'my-id',
                 paneClass: 'test',
                 //position: 'left',
