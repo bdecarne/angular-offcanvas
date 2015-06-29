@@ -120,25 +120,6 @@ angular.module('angular.offcanvas')
                     if (offcanvas) {
                         $offcanvasStack.offcanvasRendered(offcanvas.key);
                     }
-
-                    var closeOnOutsideClick = scope.$eval(attrs.closeOnOutsideClick);
-                    if(closeOnOutsideClick) {
-                        $timeout(function() {
-                            $document.bind('click', function(event) {
-                                var level = 0;
-                                for (var element = event.target; element; element = element.parentNode) {
-                                    if (angular.element(element).hasClass('offcanvas-pane')) {
-                                        return;
-                                    }
-                                    level++;
-                                }
-                                $offcanvasStack.close(offcanvas.key);
-                                angular.element(this).off(event);
-                            });
-                        });
-                    }
-
-
                 });
 
 
@@ -378,9 +359,28 @@ angular.module('angular.offcanvas')
 
                 var offcanvasDomEl = $compile(angularDomEl)(offcanvas.scope);
                 openedWindows.top().value.offcanvasDomEl = offcanvasDomEl;
+
                 $timeout(function() {
+                    // append the dom element
                     stackDomEl.append(offcanvasDomEl);
+
+                    // add the body class
                     body.addClass(OPENED_OFFCANVAS_CLASS);
+
+                    // bind a click event to the document to handle closeOnOutsideClick
+                    if(offcanvas.closeOnOutsideClick) {
+                        $document.bind('click', function(event) {
+                            var level = 0;
+                            for (var element = event.target; element; element = element.parentNode) {
+                                if (angular.element(element).hasClass('offcanvas-pane')) {
+                                    return;
+                                }
+                                level++;
+                            }
+                            offcanvasInstance.close();
+                            angular.element(this).off(event);
+                        });
+                    };
                 });
             };
 

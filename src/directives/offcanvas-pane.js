@@ -79,25 +79,6 @@ angular.module('angular.offcanvas')
                     if (offcanvas) {
                         $offcanvasStack.offcanvasRendered(offcanvas.key);
                     }
-
-                    var closeOnOutsideClick = scope.$eval(attrs.closeOnOutsideClick);
-                    if(closeOnOutsideClick) {
-                        $timeout(function() {
-                            $document.bind('click', function(event) {
-                                var level = 0;
-                                for (var element = event.target; element; element = element.parentNode) {
-                                    if (angular.element(element).hasClass('offcanvas-pane')) {
-                                        return;
-                                    }
-                                    level++;
-                                }
-                                $offcanvasStack.close(offcanvas.key);
-                                angular.element(this).off(event);
-                            });
-                        });
-                    }
-
-
                 });
 
 
