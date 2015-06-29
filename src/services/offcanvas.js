@@ -138,7 +138,8 @@ angular.module('angular.offcanvas')
                                 paneTemplateUrl: offcanvasOptions.paneTemplateUrl,
                                 size: offcanvasOptions.size,
                                 target: offcanvasOptions.target,
-                                position: offcanvasOptions.position
+                                position: offcanvasOptions.position,
+                                closeOnOutsideClick: offcanvasOptions.closeOnOutsideClick
                             });
 
                         }, function resolveError(reason) {
