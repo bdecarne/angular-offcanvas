@@ -78,6 +78,14 @@ angular.module('angular.offcanvas')
                 scope.animate = false;
 
                 if (domEl.attr('offcanvas-animation') && $animate.enabled()) {
+                    //
+                    //$animate.on('removeClass', domEl, function(element, phase) {
+                    //    if(phase == 'close') {
+                    //        $rootScope.$evalAsync(afterAnimating);
+                    //    }
+                    //});
+
+
                     // transition out
                     domEl.one('$animate:close', function closeFn() {
                         $rootScope.$evalAsync(afterAnimating);
@@ -93,7 +101,7 @@ angular.module('angular.offcanvas')
                     }
                     afterAnimating.done = true;
 
-                    domEl.remove();
+                    console.log("test");
                     scope.$destroy();
                     if (done) {
                         done();
@@ -158,8 +166,7 @@ angular.module('angular.offcanvas')
                     'size': offcanvas.size,
                     'index': openedWindows.length() - 1,
                     'animate': 'animate',
-                    'position': offcanvas.position,
-                    'close-on-outside-click': offcanvas.closeOnOutsideClick
+                    'position': offcanvas.position
                 }).html(offcanvas.content);
                 if (offcanvas.animation) {
                     angularDomEl.attr('offcanvas-animation', 'true');
@@ -167,9 +174,30 @@ angular.module('angular.offcanvas')
 
                 var offcanvasDomEl = $compile(angularDomEl)(offcanvas.scope);
                 openedWindows.top().value.offcanvasDomEl = offcanvasDomEl;
+
                 $timeout(function() {
+                    // append the dom element
                     stackDomEl.append(offcanvasDomEl);
+
+                    // add the body class
                     body.addClass(OPENED_OFFCANVAS_CLASS);
+
+                    // bind a click event to the document to handle closeOnOutsideClick
+                    if(offcanvas.closeOnOutsideClick) {
+                        $document.bind('click', function(event) {
+                            var level = 0;
+                            for (var element = event.target; element; element = element.parentNode) {
+                                if (angular.element(element).hasClass('offcanvas-pane')) {
+                                    return;
+                                }
+                                level++;
+                            }
+                            $rootScope.$apply(function () {
+                                offcanvasInstance.dismiss('click outside');
+                            });
+                            angular.element(this).off(event);
+                        });
+                    };
                 });
             };
 
