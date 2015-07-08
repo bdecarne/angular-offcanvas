@@ -78,18 +78,20 @@ angular.module('angular.offcanvas')
                 scope.animate = false;
 
                 if (domEl.attr('offcanvas-animation') && $animate.enabled()) {
-                    //
-                    //$animate.on('removeClass', domEl, function(element, phase) {
-                    //    if(phase == 'close') {
-                    //        $rootScope.$evalAsync(afterAnimating);
-                    //    }
-                    //});
-
-
                     // transition out
-                    domEl.one('$animate:close', function closeFn() {
-                        $rootScope.$evalAsync(afterAnimating);
-                    });
+                    if(typeof $animate.on !== "undefined") {
+                        // angular 1.4
+                        $animate.on('removeClass', domEl, function(element, phase) {
+                            if(phase == 'close') {
+                                $rootScope.$evalAsync(afterAnimating);
+                            }
+                        });
+                    } else {
+                        // angular 1.3
+                        domEl.one('$animate:close', function closeFn() {
+                            $rootScope.$evalAsync(afterAnimating);
+                        });
+                    }
                 } else {
                     // Ensure this call is async
                     $timeout(afterAnimating);
@@ -101,7 +103,7 @@ angular.module('angular.offcanvas')
                     }
                     afterAnimating.done = true;
 
-                    console.log("test");
+                    domEl.remove();
                     scope.$destroy();
                     if (done) {
                         done();
