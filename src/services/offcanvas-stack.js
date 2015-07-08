@@ -78,6 +78,14 @@ angular.module('angular.offcanvas')
                 scope.animate = false;
 
                 if (domEl.attr('offcanvas-animation') && $animate.enabled()) {
+                    //
+                    //$animate.on('removeClass', domEl, function(element, phase) {
+                    //    if(phase == 'close') {
+                    //        $rootScope.$evalAsync(afterAnimating);
+                    //    }
+                    //});
+
+
                     // transition out
                     domEl.one('$animate:close', function closeFn() {
                         $rootScope.$evalAsync(afterAnimating);
@@ -93,7 +101,7 @@ angular.module('angular.offcanvas')
                     }
                     afterAnimating.done = true;
 
-                    domEl.remove();
+                    console.log("test");
                     scope.$destroy();
                     if (done) {
                         done();
