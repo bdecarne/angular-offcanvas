@@ -1,21 +1,8 @@
 angular.module('angular.offcanvas')
-    .directive('offcanvasStack', ['$timeout', function ($timeout) {
+    .directive('offcanvasStack', [function () {
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/offcanvas/stack.html',
-            compile: function (tElement, tAttrs) {
-                tElement.addClass(tAttrs.stackClass);
-                return linkFn;
-            }
+            templateUrl: 'templates/offcanvas/stack.html'
         };
-
-        function linkFn(scope, element, attrs) {
-            scope.animate = false;
-
-            //trigger CSS transitions
-            $timeout(function () {
-                scope.animate = true;
-            });
-        }
     }]);

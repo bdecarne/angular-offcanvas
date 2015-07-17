@@ -159,25 +159,12 @@ angular.module('angular.offcanvas')
         };
     }]);
 angular.module('angular.offcanvas')
-    .directive('offcanvasStack', ['$timeout', function ($timeout) {
+    .directive('offcanvasStack', [function () {
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/offcanvas/stack.html',
-            compile: function (tElement, tAttrs) {
-                tElement.addClass(tAttrs.stackClass);
-                return linkFn;
-            }
+            templateUrl: 'templates/offcanvas/stack.html'
         };
-
-        function linkFn(scope, element, attrs) {
-            scope.animate = false;
-
-            //trigger CSS transitions
-            $timeout(function () {
-                scope.animate = true;
-            });
-        }
     }]);
 angular.module('angular.offcanvas')
     .directive('offcanvasTransclude', function () {
@@ -198,10 +185,18 @@ angular.module('angular.offcanvas')
             var BACKDROP_OFFCANVAS_CLASS = 'offcanvas-with-backdrop';
             var stackDomEl, stackScope;
 
-
             var backdropDomEl, backdropScope;
             var openedWindows = $$stackedMap.createNew();
             var $offcanvasStack = {};
+
+            var body = $document.find('body').eq(0);
+
+            // append offcanvas stack
+            stackScope = $rootScope.$new(true);
+            var stackElement = angular.element('<div offcanvas-stack="offcanvas-stack"></div>');
+            //stackElement.attr('stack-class', offcanvas.stackClass);
+            stackDomEl = $compile(stackElement)(stackScope);
+            body.append(stackDomEl);
 
             function backdropIndex() {
                 var topBackdropIndex = -1;
@@ -222,7 +217,6 @@ angular.module('angular.offcanvas')
 
             function removeOffcanvasWindow(offcanvasInstance, closedCallback) {
 
-                var body = $document.find('body').eq(0);
                 var offcanvasWindow = openedWindows.get(offcanvasInstance).value;
 
                 // if there is parent instance, extend it
@@ -252,7 +246,6 @@ angular.module('angular.offcanvas')
             }
 
             function checkRemoveBackdrop() {
-                var body = $document.find('body').eq(0);
                 //remove backdrop if no longer needed
                 if (backdropDomEl && backdropIndex() == -1) {
                     var backdropScopeRef = backdropScope;
@@ -329,8 +322,7 @@ angular.module('angular.offcanvas')
                     target: offcanvas.target
                 });
 
-                var body = $document.find('body').eq(0),
-                    currBackdropIndex = backdropIndex();
+                var currBackdropIndex = backdropIndex();
 
                 if (currBackdropIndex >= 0 && !backdropDomEl) {
                     backdropScope = $rootScope.$new(true);
@@ -345,13 +337,13 @@ angular.module('angular.offcanvas')
                     body.addClass(BACKDROP_OFFCANVAS_CLASS);
                 }
 
-                if (!stackDomEl) {
+               /* if (!stackDomEl) {
                     stackScope = $rootScope.$new(true);
                     var stackElement = angular.element('<div offcanvas-stack="offcanvas-stack"></div>');
                     stackElement.attr('stack-class', offcanvas.stackClass);
                     stackDomEl = $compile(stackElement)(stackScope);
                     body.append(stackDomEl);
-                }
+                }*/
 
                 var angularDomEl = angular.element('<div offcanvas-pane="offcanvas-pane"></div>');
                 angularDomEl.attr({
