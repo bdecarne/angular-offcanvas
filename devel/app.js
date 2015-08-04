@@ -2,25 +2,30 @@ angular.module('App', ['angular.offcanvas', 'ngAnimate'])
     .controller('TestController', function($scope, $offcanvas) {
         var instance;
 
+        var compiled = null;
+        $offcanvas.prepare({
+            templateUrl: 'myDialog.html',
+            controller: 'DialogInstanceCtrl',
+            backdrop: false,
+            closeOnOutsideClick: true,
+            target: 'my-id',
+            paneClass: 'test',
+            //position: 'left',
+            //dismissAll: false,
+            resolve:{
+                test: function() {
+                    return "1";
+                }
+            }
+        }).then(function(elmt) {
+            compiled = elmt;
+        });
+
+
 
 
         $scope.open = function(size) {
-            instance = $offcanvas.open({
-                templateUrl: 'myDialog.html',
-                controller: 'DialogInstanceCtrl',
-                size: size,
-                backdrop: false,
-                closeOnOutsideClick: true,
-                target: 'my-id',
-                paneClass: 'test',
-                //position: 'left',
-                //dismissAll: false,
-                resolve:{
-                    test: function() {
-                        return "1";
-                    }
-                }
-            });
+            instance = $offcanvas.open(compiled);
             instance.result.then(function (selectedItem) {
                 //$log.info('Modal validated at: ' + new Date());
             }, function () {

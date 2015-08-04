@@ -8,8 +8,8 @@ angular.module('angular.offcanvas')
                 dismissAll: true,
                 position: 'right'
             },
-            $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$offcanvasStack',
-                function ($injector, $rootScope, $q, $http, $templateCache, $controller, $offcanvasStack) {
+            $get: ['$injector', '$rootScope', '$q', '$http', '$compile', '$templateCache', '$controller', '$offcanvasStack',
+                function ($injector, $rootScope, $q, $http, $compile, $templateCache, $controller, $offcanvasStack) {
 
                     var $offcanvas = {};
 
@@ -29,6 +29,57 @@ angular.module('angular.offcanvas')
                             }
                         });
                         return promisesArr;
+                    }
+
+                    /**
+                     * prepare a canvas (compile template)
+                     *
+                     * @param offcanvasOptions
+                     * @returns {*}
+                     */
+                    $offcanvas.prepare = function (offcanvasOptions) {
+                        var deferred = $q.defer();
+
+                        // inject parent
+                        if(offcanvasOptions.parent) {
+                            // if the parent has a position, heritate
+                            if(!offcanvasOptions.position && offcanvasOptions.parent.options.position) {
+                                offcanvasOptions.position = offcanvasOptions.parent.options.position;
+                            }
+                        }
+
+                        //merge and clean up options
+                        offcanvasOptions = angular.extend({}, $offcanvasProvider.options, offcanvasOptions);
+
+                        //verify options
+                        if (!offcanvasOptions.template && !offcanvasOptions.templateUrl) {
+                            throw new Error('One of template or templateUrl options is required.');
+                        }
+
+                        getTemplatePromise(offcanvasOptions).then(function resolveSuccess(tpl) {
+
+                            var angularDomEl = angular.element('<div offcanvas-pane="offcanvas-pane"></div>');
+                            angularDomEl.attr({
+                                'template-url': offcanvasOptions.paneTemplateUrl,
+                                'pane-class': offcanvasOptions.paneClass,
+                                'size': offcanvasOptions.size,
+                                //'index': openedWindows.length() - 1,
+                                'animate': 'animate',
+                                'position': offcanvasOptions.position
+                            }).html(tpl);
+                            if (offcanvasOptions.animation) {
+                                angularDomEl.attr('offcanvas-animation', 'true');
+                            }
+
+                            var compileFunc = $compile(angularDomEl);
+                            offcanvasOptions.compileFunc = compileFunc;
+                            deferred.resolve(offcanvasOptions);
+
+                        }, function resolveError(reason) {
+                            deferred.reject(reason);
+                        });
+
+                        return deferred.promise;
                     }
 
                     /**
@@ -69,88 +120,72 @@ angular.module('angular.offcanvas')
 
                         // inject parent
                         if(offcanvasOptions.parent) {
-                            // if the parent has a position, heritate
-                            if(!offcanvasOptions.position && offcanvasOptions.parent.options.position) {
-                                offcanvasOptions.position = offcanvasOptions.parent.options.position;
-                            }
                             offcanvasInstance.parent = offcanvasOptions.parent;
                         }
 
-                        //merge and clean up options
-                        offcanvasOptions = angular.extend({}, $offcanvasProvider.options, offcanvasOptions);
-                        offcanvasOptions.resolve = offcanvasOptions.resolve || {};
-
                         // attach the options to the instance
                         offcanvasInstance.options = offcanvasOptions;
-
-                        //verify options
-                        if (!offcanvasOptions.template && !offcanvasOptions.templateUrl) {
-                            throw new Error('One of template or templateUrl options is required.');
+                        if(offcanvasOptions.compileFunc) {
+                            compileScope(offcanvasOptions);
+                        } else {
+                            $offcanvas.prepare(offcanvasOptions).then(function() {
+                                compileScope(offcanvasOptions);
+                            });
                         }
 
-                        var templateAndResolvePromise =
-                            $q.all([getTemplatePromise(offcanvasOptions)].concat(getResolvePromises(offcanvasOptions.resolve)));
+                        function compileScope(offcanvasOptions) {
+                            offcanvasOptions.resolve = offcanvasOptions.resolve || {};
+                            $q.all(getResolvePromises(offcanvasOptions.resolve)).then(function(vars) {
+                                var offcanvasScope = (offcanvasOptions.scope || $rootScope).$new();
+                                offcanvasScope.$close = offcanvasInstance.close;
+                                offcanvasScope.$dismiss = offcanvasInstance.dismiss;
 
+                                var ctrlInstance, ctrlLocals = {};
+                                var resolveIter = 0;
 
-                        templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
+                                //controllers
+                                if (offcanvasOptions.controller) {
+                                    ctrlLocals = angular.copy(vars);
+                                    ctrlLocals.$scope = offcanvasScope;
+                                    ctrlLocals.$offcanvasInstance = offcanvasInstance;
+                                    angular.forEach(offcanvasOptions.resolve, function (value, key) {
+                                        ctrlLocals[key] = vars[resolveIter++];
+                                    });
 
-                            var offcanvasScope = (offcanvasOptions.scope || $rootScope).$new();
-                            offcanvasScope.$close = offcanvasInstance.close;
-                            offcanvasScope.$dismiss = offcanvasInstance.dismiss;
+                                    ctrlInstance = $controller(offcanvasOptions.controller, ctrlLocals);
+                                    if (offcanvasOptions.controllerAs) {
+                                        offcanvasScope[offcanvasOptions.controllerAs] = ctrlInstance;
+                                    }
+                                }
 
-                            var ctrlInstance, ctrlLocals = {};
-                            var resolveIter = 1;
+                                if(offcanvasInstance.parent) {
+                                    $offcanvasStack.reduce(offcanvasInstance.parent);
+                                } else {
+                                    if(offcanvasOptions.dismissAll) {
+                                        $offcanvasStack.dismissAll();
+                                    }
+                                }
 
-                            //controllers
-                            if (offcanvasOptions.controller) {
-                                ctrlLocals.$scope = offcanvasScope;
-                                ctrlLocals.$offcanvasInstance = offcanvasInstance;
-                                angular.forEach(offcanvasOptions.resolve, function (value, key) {
-                                    ctrlLocals[key] = tplAndVars[resolveIter++];
+                                $offcanvasStack.open(offcanvasInstance, {
+                                    scope: offcanvasScope,
+                                    deferred: offcanvasResultDeferred,
+                                    renderDeferred: offcanvasRenderDeferred,
+                                    closedDeferred: offcanvasClosedDeferred,
+                                    compileFunc: offcanvasOptions.compileFunc,
+                                    parent: offcanvasOptions.parent,
+                                    animation: offcanvasOptions.animation,
+                                    backdrop: offcanvasOptions.backdrop,
+                                    keyboard: offcanvasOptions.keyboard,
+                                    backdropClass: offcanvasOptions.backdropClass,
+                                    paneClass: offcanvasOptions.paneClass,
+                                    paneTemplateUrl: offcanvasOptions.paneTemplateUrl,
+                                    size: offcanvasOptions.size,
+                                    target: offcanvasOptions.target,
+                                    position: offcanvasOptions.position,
+                                    closeOnOutsideClick: offcanvasOptions.closeOnOutsideClick
                                 });
-
-                                ctrlInstance = $controller(offcanvasOptions.controller, ctrlLocals);
-                                if (offcanvasOptions.controllerAs) {
-                                    offcanvasScope[offcanvasOptions.controllerAs] = ctrlInstance;
-                                }
-                            }
-
-                            if(offcanvasInstance.parent) {
-                                $offcanvasStack.reduce(offcanvasInstance.parent);
-                            } else {
-                                if(offcanvasOptions.dismissAll) {
-                                    $offcanvasStack.dismissAll();
-                                }
-                            }
-
-                            $offcanvasStack.open(offcanvasInstance, {
-                                scope: offcanvasScope,
-                                deferred: offcanvasResultDeferred,
-                                renderDeferred: offcanvasRenderDeferred,
-                                closedDeferred: offcanvasClosedDeferred,
-                                content: tplAndVars[0],
-                                parent: offcanvasOptions.parent,
-                                animation: offcanvasOptions.animation,
-                                backdrop: offcanvasOptions.backdrop,
-                                keyboard: offcanvasOptions.keyboard,
-                                backdropClass: offcanvasOptions.backdropClass,
-                                paneClass: offcanvasOptions.paneClass,
-                                paneTemplateUrl: offcanvasOptions.paneTemplateUrl,
-                                size: offcanvasOptions.size,
-                                target: offcanvasOptions.target,
-                                position: offcanvasOptions.position,
-                                closeOnOutsideClick: offcanvasOptions.closeOnOutsideClick
                             });
-
-                        }, function resolveError(reason) {
-                            offcanvasResultDeferred.reject(reason);
-                        });
-
-                        templateAndResolvePromise.then(function () {
-                            offcanvasOpenedDeferred.resolve(true);
-                        }, function (reason) {
-                            offcanvasOpenedDeferred.reject(reason);
-                        });
+                        }
 
                         return offcanvasInstance;
                     };

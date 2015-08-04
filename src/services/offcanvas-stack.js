@@ -158,28 +158,12 @@ angular.module('angular.offcanvas')
                     body.addClass(BACKDROP_OFFCANVAS_CLASS);
                 }
 
-               /* if (!stackDomEl) {
-                    stackScope = $rootScope.$new(true);
-                    var stackElement = angular.element('<div offcanvas-stack="offcanvas-stack"></div>');
-                    stackElement.attr('stack-class', offcanvas.stackClass);
-                    stackDomEl = $compile(stackElement)(stackScope);
-                    body.append(stackDomEl);
-                }*/
-
-                var angularDomEl = angular.element('<div offcanvas-pane="offcanvas-pane"></div>');
-                angularDomEl.attr({
-                    'template-url': offcanvas.paneTemplateUrl,
-                    'pane-class': offcanvas.paneClass,
-                    'size': offcanvas.size,
-                    'index': openedWindows.length() - 1,
-                    'animate': 'animate',
-                    'position': offcanvas.position
-                }).html(offcanvas.content);
+                var offcanvasDomEl = offcanvas.compileFunc(offcanvas.scope);
+                console.log(offcanvasDomEl);
+                offcanvasDomEl.attr('index', openedWindows.length() - 1);
                 if (offcanvas.animation) {
-                    angularDomEl.attr('offcanvas-animation', 'true');
+                    offcanvasDomEl.attr('offcanvas-animation', 'true');
                 }
-
-                var offcanvasDomEl = $compile(angularDomEl)(offcanvas.scope);
                 openedWindows.top().value.offcanvasDomEl = offcanvasDomEl;
 
                 $timeout(function() {

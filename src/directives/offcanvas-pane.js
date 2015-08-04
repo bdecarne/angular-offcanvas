@@ -27,10 +27,11 @@ angular.module('angular.offcanvas')
                 var offcanvasRenderDeferObj = $q.defer();
                 // Observe function will be called on next digest cycle after compilation, ensuring that the DOM is ready.
                 // In order to use this way of finding whether DOM is ready, we need to observe a scope property used in offcanvas's template.
-                attrs.$observe('offcanvasRender', function (value) {
-                    if (value == 'true') {
+                //attrs.$observe('offcanvasRender', function (value) {
+                scope.$watch('$id', function (value) {
+                    //if (value == 'true') {
                         offcanvasRenderDeferObj.resolve();
-                    }
+                    //}
                 });
 
                 // observe offcanvasSize
@@ -46,7 +47,6 @@ angular.module('angular.offcanvas')
                 });
 
                 offcanvasRenderDeferObj.promise.then(function () {
-
                     $timeout(function () {
                         // eval scrollbar
                         evalScrollbar();
