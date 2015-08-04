@@ -8,17 +8,14 @@ angular.module('angular.offcanvas')
                 dismissAll: true,
                 position: 'right'
             },
-            $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$offcanvasStack',
-                function ($injector, $rootScope, $q, $http, $templateCache, $controller, $offcanvasStack) {
+            $get: ['$injector', '$rootScope', '$q', '$templateRequest', '$controller', '$offcanvasStack',
+                function ($injector, $rootScope, $q, $templateRequest, $controller, $offcanvasStack) {
 
                     var $offcanvas = {};
 
                     function getTemplatePromise(options) {
                         return options.template ? $q.when(options.template) :
-                            $http.get(angular.isFunction(options.templateUrl) ? (options.templateUrl)() : options.templateUrl,
-                                {cache: $templateCache}).then(function (result) {
-                                    return result.data;
-                                });
+                          $templateRequest(angular.isFunction(options.templateUrl) ? (options.templateUrl)() : options.templateUrl);
                     }
 
                     function getResolvePromises(resolves) {
