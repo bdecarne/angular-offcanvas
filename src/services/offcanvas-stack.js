@@ -186,7 +186,7 @@ angular.module('angular.offcanvas')
 
                     // bind a click event to the document to handle closeOnOutsideClick
                     if(offcanvas.closeOnOutsideClick) {
-                        $document.bind('click', function(event) {
+                        $document.bind('touchstart click', function(event) {
                             var level = 0;
                             for (var element = event.target; element; element = element.parentNode) {
                                 if (angular.element(element).hasClass('offcanvas-pane')) {

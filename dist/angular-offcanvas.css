@@ -59,8 +59,8 @@ body.offcanvas-with-backdrop {
   background-color: #FFF;
   overflow: auto;
   box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.38);
-  -webkit-transition: -webkit-transform 0.5s cubic-bezier(.22, .99, .68, .98);
-  transition: transform 0.5s cubic-bezier(.22, .99, .68, .98); }
+  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.22, 0.99, 0.68, 0.98);
+  transition: transform 0.5s cubic-bezier(0.22, 0.99, 0.68, 0.98); }
   .offcanvas-pane.width-1.right {
     right: -40px; }
   .offcanvas-pane.width-1.left {
@@ -232,7 +232,7 @@ body.offcanvas-with-backdrop {
 
 .fade {
   opacity: 0;
-  -webkit-transition: opacity .15s linear;
-  transition: opacity .15s linear; }
+  -webkit-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear; }
   .fade.in {
     opacity: 1; }
