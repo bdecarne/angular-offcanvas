@@ -230,9 +230,9 @@ body.offcanvas-with-backdrop {
   display: block;
   background-color: rgba(0, 0, 0, 0.3); }
 
-.fade {
+.offcanvas-backdrop.fade {
   opacity: 0;
   -webkit-transition: opacity 0.15s linear;
   transition: opacity 0.15s linear; }
-  .fade.in {
+  .offcanvas-backdrop.fade.in {
     opacity: 1; }
