@@ -154,7 +154,7 @@ body.offcanvas-with-backdrop {
 // animations
 // --------------------------------------------------
 
-.fade {
+.offcanvas-backdrop.fade {
   opacity: 0;
   @include transition(opacity .15s linear);
   &.in {
